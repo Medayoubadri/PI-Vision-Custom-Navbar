@@ -1,0 +1,590 @@
+/* Main Header Bar */
+.piv-custom-header-bar {
+  position: relative;
+  height: 36px;
+  background-color: linear-gradient(to right, #072c50 0, #091d3a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: "Poppins", Arial, sans-serif;
+  padding: 10px 15px;
+  transition: all 0.3s ease;
+}
+
+/* Styles for the minimized/hidden bar */
+.piv-custom-header-bar.piv-minimized {
+  height: 55px;
+  padding: 7px 15px;
+  width: auto;
+  right: 0px;
+  left: auto;
+  border-radius: 12px 0 0 12px;
+  justify-self: end;
+}
+
+/* Secondary logo styles */
+.piv-secondary-logo {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.piv-sidebar-logo {
+  display: flex;
+  margin-bottom: 20px;
+  margin-left: 20px;
+  align-items: flex-end;
+  position: absolute;
+  height: fit-content !important;
+  width: fit-content !important;
+  left: 0;
+  bottom: 0;
+  z-index: 999;
+}
+
+.piv-sidebar-logo svg {
+  height: 160px;
+  width: auto;
+}
+
+/* Live Date and time styles */
+.piv-live-date {
+  display: flex;
+  font-size: 16px;
+  font-weight: 500;
+  color: #ffffffcc;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  font-family: "Poppins", Arial, sans-serif;
+  justify-content: center;
+  align-items: center;
+}
+
+.piv-secondary-logo svg {
+  height: 24px;
+  width: auto;
+}
+
+/* Hide the main menu and logo when minimized */
+.piv-custom-header-bar.piv-minimized .piv-logo-container,
+.piv-custom-header-bar.piv-minimized .piv-menu-bar {
+  display: none !important;
+}
+
+/* Replace PI Vision logo */
+.c-app-logo a {
+  display: none !important;
+}
+
+/* Logo Styling */
+.piv-logo-container {
+  padding: 0 10px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+.piv-ocp-logo svg {
+  height: 40px;
+  width: auto;
+}
+
+.piv-aveva-logo img {
+  width: 130px !important;
+  margin-left: 10px;
+  margin-top: 4px;
+  height: 25px !important;
+}
+
+/* Menu Bar Container */
+.piv-menu-bar {
+  display: flex;
+  flex-grow: 1;
+  height: 100%;
+  align-items: stretch;
+  justify-content: center; /* Center the main menu items */
+  margin: 0 20px;
+}
+
+/* Vertical Divider */
+.piv-menu-divider {
+  width: 2px;
+  background-color: rgb(255 255 255 / 30%);
+  margin: 18px 10px;
+  border-radius: 50px;
+}
+
+/* Individual Dropdown Container */
+.piv-dropdown-item-container {
+  position: relative;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  /* Allow menu items to shrink/grow slightly */
+  flex-shrink: 1;
+  flex-grow: 0;
+}
+
+/* Dropdown Button (Title) */
+.piv-dropbtn {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  color: white;
+  padding-inline: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 50px;
+  height: 100%;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+}
+
+/* Ensure utility button height adjusts when minimized */
+.piv-custom-header-bar.piv-minimized .piv-utility-container .piv-dropbtn {
+  line-height: 30px;
+}
+
+/* Active State Fix */
+.piv-dropbtn:hover,
+.piv-dropdown-item-container.active .piv-dropbtn,
+#sidebar-pane tool-tabs > ul > li.k-item.k-state-default:hover {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Dropdown Content */
+.piv-dropdown-content {
+  visibility: hidden;
+  padding: 5px;
+  opacity: 0;
+  position: absolute;
+  top: 110%;
+  left: 0;
+  background-color: #ffffffd4;
+  backdrop-filter: blur(10px);
+  max-width: 300px;
+  box-shadow: 6px 24px 30px 0px rgb(0 0 0 / 20%);
+  z-index: 100000000 !important;
+  border-radius: 12px;
+  border-top: 1px solid #ffffff7d;
+  border-bottom: 3px solid #2a3e5d;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease-out, transform 0.5s ease-out,
+    visibility 0.2s ease-out;
+  text-align: left;
+  display: flex; /* IMPORTANT: Use flex-direction column for children to stack */
+  flex-direction: column;
+}
+
+/* Utility Dropdown (right-aligned, different style) */
+.piv-utility-wrapper .piv-dropdown-content {
+  right: 0;
+  left: auto; /* Overrides left: 0 */
+  border-radius: 12px;
+}
+
+.piv-btn-cog {
+  width: 25px;
+  height: auto;
+  filter: brightness(5);
+}
+.piv-utility-container.active .piv-utility-btn .piv-btn-cog {
+  transform: rotate(180deg);
+  transition: transform 0.5s ease;
+}
+
+.piv-submenu-title {
+  cursor: default;
+}
+
+/* Menu Items */
+.piv-dropdown-content a,
+.piv-submenu-title {
+  color: #333;
+  padding: 14px 16px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  border-radius: 6px;
+  margin-bottom: 2px;
+  white-space: nowrap;
+}
+
+.piv-dropdown-content a:hover .piv-icon,
+.piv-nested-submenu a:hover .piv-icon {
+  color: #026d26;
+}
+
+.piv-dropdown-content a:hover,
+.piv-fullscreen-submenu a:hover,
+.piv-nested-submenu a:hover,
+.piv-submenu-title:hover {
+  background-color: #00000021;
+  color: #026d26;
+}
+
+/* Icon Styling */
+.piv-icon {
+  width: 18px;
+  text-align: center;
+  margin-right: 10px;
+  font-size: 14px;
+  color: #2a3e5d;
+  flex-shrink: 0;
+}
+
+/* Show the dropdown - Activated on hover */
+.piv-dropdown-item-container:hover .piv-dropdown-content {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Arrow icon (main menu) */
+.piv-arrow {
+  margin-left: 5px;
+  font-size: 0.8em;
+  transition: transform 0.2s ease;
+}
+
+/* Submenu arrow (points right) */
+.piv-arrow-right {
+  margin-left: auto;
+  font-size: 0.75em;
+  opacity: 0.7;
+}
+
+/* Rotate arrow on hover */
+.piv-dropdown-item-container:hover .piv-arrow {
+  transform: rotate(180deg);
+}
+
+/* ------------------------------------------------
+    NESTED SUBMENU POSITIONING (Main Menu)
+    ------------------------------------------------ */
+
+/* Nested Menu Wrapper (to hold the link and the side menu) */
+.piv-menu-wrapper {
+  position: relative;
+  /* Match the size of a standard menu item */
+  width: 100%;
+  display: block;
+}
+
+.piv-has-nested {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* The main link for the nested menu (it's a standard piv-menu-item but inside a wrapper) */
+.piv-menu-wrapper > .piv-menu-item {
+  margin-bottom: 0; /* Remove margin-bottom so it aligns with the submenu */
+}
+
+/* Submenu container (appears next to parent) */
+.piv-nested-submenu {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  /* Position to the RIGHT of the parent main menu item */
+  left: 100%;
+  background-color: #ffffff; /* Solid white background for the nested menu */
+  box-shadow: 6px 8px 30px 0px rgb(0 0 0 / 20%);
+  z-index: 100000001 !important; /* Higher than main menu content */
+  border-radius: 12px;
+  padding: 5px;
+  border-bottom: 3px solid #2a3e5d;
+  transform: translateX(-6px); /* Small offset for transition */
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out,
+    visibility 0.2s ease-out;
+  white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The individual link items inside the nested submenu */
+.piv-nested-submenu > a.piv-menu-item.piv-submenu-item {
+  /* Use margin-bottom again for the actual links */
+  margin-bottom: 2px;
+  color: #333; /* Ensure text color is right for white background */
+}
+
+/* Show submenu on hover of the wrapper */
+.piv-menu-wrapper:hover .piv-nested-submenu {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(5px);
+}
+
+/* ------------------------------------------------
+    NESTED SUBMENU POSITIONING
+    ------------------------------------------------ */
+
+/* Nested Utility Menu Wrapper (for side positioning) */
+.piv-utility-menu-wrapper {
+  position: relative;
+  /* Match the size of a standard utility item */
+  width: 100%;
+  display: block;
+}
+
+/* Submenu container (appears next to parent) */
+.piv-fullscreen-submenu {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  /* Position to the LEFT of the parent utility menu */
+  right: 100%;
+  background-color: #ffffff;
+  box-shadow: -6px 8px 30px 0px rgb(0 0 0 / 20%);
+  z-index: 100000001 !important; /* Higher than main menu content */
+  border-radius: 12px;
+  padding: 5px;
+  border-bottom: 3px solid #2a3e5d;
+  transform: translateX(10px); /* Small offset for transition */
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out,
+    visibility 0.2s ease-out;
+  white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Show submenu on hover of the wrapper */
+.piv-utility-menu-wrapper:hover .piv-fullscreen-submenu {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-6px);
+}
+
+/* ===============================
+  THEME PICKER – DESIGN MODE
+  =============================== */
+
+.piv-theme-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -48%) scale(0.95);
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  user-select: none;
+  background: #7d7d7db5;
+  border-radius: 18px;
+  padding: 20px 18px 16px;
+  width: 520px;
+  height: 380px;
+  z-index: 1000000000;
+  box-shadow: 0px 60px 50px rgb(0 0 0 / 43%);
+  color: #e5e7eb;
+  font-family: Inter, system-ui, sans-serif;
+  backdrop-filter: blur(10px);
+}
+
+.piv-theme-popup.active {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  user-select: auto;
+}
+
+.piv-color-popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.piv-color-popup-header span {
+  color: white;
+  font-size: 20px;
+}
+
+.piv-color-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  color: #ffffffff;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.piv-theme-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.piv-theme-card {
+  background: #020617;
+  border-radius: 12px;
+  padding: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-align: center;
+}
+
+.piv-theme-card svg {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.piv-theme-card span {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: #cbd5f5;
+}
+
+.piv-theme-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.piv-theme-footer {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.piv-color-input {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+}
+
+/* ===============================
+  THEME PICKER – DESIGN MODE END
+  =============================== */
+
+/* =======================================================
+    FULL SCREEN MODE STYLES
+    =======================================================
+*/
+
+/* Hide specific PI Vision elements */
+.piv-fullscreen-active .c-header-container,
+.piv-fullscreen-active .c-display-header,
+.piv-fullscreen-active #sidebar-pane,
+.piv-fullscreen-active .k-splitbar,
+.piv-fullscreen-active #config-pane {
+  display: none !important;
+}
+
+/* Resize PI Vision containers to fill the screen */
+.piv-fullscreen-active #shell-splitter-container > div:nth-of-type(3) {
+  top: 0px !important;
+  height: 100% !important;
+  width: 100% !important;
+  left: 0 !important;
+}
+
+.piv-fullscreen-active #footer-pane {
+  top: unset !important;
+  bottom: 0 !important;
+  width: 100% !important;
+}
+
+.piv-fullscreen-active #display-splitter-container {
+  height: 97% !important;
+  width: 100% !important;
+}
+
+.piv-fullscreen-active #center-pane {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Ensure custom header stays visible and at the top */
+.piv-fullscreen-active #piv-custom-header {
+  top: 0px !important;
+}
+
+/**** Other PI Vision Styles ****/
+
+#display-splitter-container,
+.t-border-layout-mode {
+  border-radius: 10px !important;
+}
+
+.c-icon-zoom-control {
+  background-color: rgb(0 55 11) !important;
+  border: 1px solid rgba(230, 231, 232, 0.1) !important;
+  border-radius: 10px !important;
+}
+
+/***** Sidebar Styles ******/
+#sidebar-pane tool-tabs ul.k-tabstrip-items {
+  padding: 0.3em !important;
+}
+
+.k-tabstrip-left > .k-tabstrip-items-wrapper .k-item {
+  border-radius: 10px !important;
+}
+
+#sidebar-pane tool-tabs > div > ul > li.k-item {
+  background-color: transparent !important;
+  border: 1px solid #091d3a !important;
+  padding: 4px 0px;
+}
+
+#sidebar-pane tool-tabs > div > ul > li.k-item:hover {
+  background-color: #091d3a96 !important;
+}
+
+#sidebar-pane tool-tabs > div > ul > li.k-item.k-active {
+  background-color: #091d3a !important;
+  padding: 40px 2px !important;
+  transition: all 0.3s ease;
+}
+
+.c-pane-header {
+  display: flex;
+  justify-content: center !important;
+  font-size: 26px !important;
+  height: 50px !important;
+  margin: 5px;
+  border-radius: 10px;
+}
+
+#timebar-form {
+  border: none !important;
+}
+
+.t-side-panel-bgcolor {
+  border-radius: 10px !important;
+}
+
+.k-tabstrip-left > .k-content,
+.k-tabstrip-left > .k-tabstrip-content {
+  border-radius: none !important;
+}
+
+#sidebar-pane tool-tabs.tool-tabs > div:not(.k-tabstrip-items-wrapper) {
+  background: transparent !important;
+  border: none;
+}
+
+.t-toolbar {
+  border-radius: 10px;
+  margin: 5px;
+  padding: 5px;
+}
+
+.t-header {
+  background-color: #2a3e5d !important;
+}

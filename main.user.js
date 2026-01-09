@@ -1,0 +1,161 @@
+// ==UserScript==
+// @name          PI Vision Custom Dropdown Menu
+// @namespace     https://github.com/Medayoubadri/PI-Vision-Custom-Navbar
+// @version       0.9.1
+// @description   A custom navbar menu for PI Vision
+// @author        MEDAYOUBADRI
+// @updateURL     https://raw.githubusercontent.com/Medayoubadri/PI-Vision-Custom-Navbar/main/main.user.js
+// @downloadURL   https://raw.githubusercontent.com/Medayoubadri/PI-Vision-Custom-Navbar/main/main.user.js
+// @match         *://pimining.ocpgroup.ma/PIVision/*
+// @require       https://raw.githubusercontent.com/Medayoubadri/PI-Vision-Custom-Navbar/main/menu.js
+// @require       https://raw.githubusercontent.com/Medayoubadri/PI-Vision-Custom-Navbar/main/ui.js
+// @resource      customCSS https://raw.githubusercontent.com/Medayoubadri/PI-Vision-Custom-Navbar/main/styles.css
+// @resource      ocpLogo https://raw.githubusercontent.com/Medayoubadri/PI-Vision-Custom-Navbar/main/ocp-logo.svg
+// @resource      secondaryLogo https://raw.githubusercontent.com/Medayoubadri/PI-Vision-Custom-Navbar/main/secondary-logo.svg
+// @resource      avevaLogo https://raw.githubusercontent.com/Medayoubadri/PI-Vision-Custom-Navbar/main/aveva-logo.svg
+// @grant         GM_addStyle
+// @grant         GM_getResourceText
+// @run-at        document-start
+// ==/UserScript==
+
+(function () {
+  "use strict";
+
+  // =================================================================
+  // MAIN ENTRY POINT - PI Vision Custom Navbar
+  // =================================================================
+
+  // Load SVG resources and make them globally available
+  window.logoSVG = GM_getResourceText("ocpLogo");
+  window.secondaryLogoSVG = GM_getResourceText("secondaryLogo");
+  window.sidebarLogoSVG = GM_getResourceText("avevaLogo");
+
+  /* Target class/container */
+  const TARGET_CONTAINER_SELECTOR = ".header-pane";
+
+  /* Allowed view hashes */
+  const ALLOWED_VIEW_HASHES = [
+    /* Commun */
+    "#/Displays/11134/Pipeline-Overview_KH-JORF",
+    "#/Displays/10955/Etat-SHUNT-Globale",
+    "#/Displays/11150/Vue-Globale-Supply-Chain",
+    "#/Displays/305/Vue-Globale-Pipeline",
+    "#/Displays/10953/Etat-Marche-Globale-Pipeline",
+    "#/Displays/10949/Suivi-des-Batchs-Pipeline",
+    "#/Displays/11149/Pipe-Consommation-Electrique",
+    "#/Displays/10938/Tonnage",
+    "#/Displays/11164/Heure-de-Marche_PIPE",
+
+    /* Head Station */
+    "#/Displays/11151/HS-Mainline-Overview",
+    "#/Displays/10961/Vue-Operationnelle_HS",
+    "#/Displays/11188/Feeders_Storage-Tanks_HS",
+    "#/Displays/10947/HS-Pompe-Etanchite-(GSW)",
+    "#/Displays/10947/Station-Tete-PERONI-(GSW)",
+    "#/Displays/11156/HS-GSW",
+    "#/Displays/11101/Etat-Simulation_Head-Station",
+    "#/Displays/11157/Maintenance_HS-Train-A",
+    "#/Displays/10928/Maintenance_HS-Train-B",
+    "#/Displays/11158/Maintenance_HS-Reception",
+    "#/Displays/11192/Controle-Energie_HS",
+
+    /* Daoui */
+    "#/Displays/11023/Daoui-overview",
+    "#/Displays/11051/DAOUI-GSW",
+    "#/Displays/621/Maintenance-DAOUI",
+    "#/Displays/11163/DAOUI-Station_Overview",
+    "#/Displays/10936/Station-DAOUI-Pompes-PERONI-(GSW)",
+    "#/Displays/11203/Controle-Energie_DA",
+
+    /* MEA */
+    "#/Displays/10960/MEA-Overview",
+    "#/Displays/11160/MEA-Feeder-Lines",
+
+    /* Beni Amir */
+    "#/Displays/11008/BA-Overview",
+    "#/Displays/11155/BENI-AMIR_GSW",
+    "#/Displays/10944/Maintenance-BENI-AMIR",
+    "#/Displays/11154/Beni-Amir_Overview",
+    "#/Displays/10946/Station-BENI-AMIR-Pompes_GSW",
+    "#/Displays/11197/Controle-Energie_BA",
+
+    /* PMS & Station Vannes */
+    "#/Displays/11043/PMS-et-station-vanne",
+    "#/Displays/60002/SV-Vibrations",
+
+    /* Terminal */
+    "#/Displays/11038/Terminal-Overview",
+  ];
+
+  /**
+   * Main function that runs on page load and on hash change (SPA navigation).
+   */
+  async function initializeMenu() {
+    const currentHash = window.location.hash;
+    const customHeader = document.getElementById("piv-custom-header");
+
+    // --- VIEW FILTERING ---
+    const isAllowed = ALLOWED_VIEW_HASHES.some((targetHash) =>
+      currentHash.startsWith(targetHash)
+    );
+
+    if (!isAllowed) {
+      // Remove the menu if the user navigates away from an allowed page
+      if (customHeader) {
+        customHeader.remove();
+        location.reload();
+      }
+      console.log("Menu script skipped: Current view is not a target view.");
+      return;
+    }
+
+    // Initialize Font awesome icons
+    loadFontAwesome();
+    // --- END VIEW FILTERING ---
+
+    // If the menu already exists, only run the position observer and exit.
+    if (customHeader) {
+      return;
+    }
+
+    // 1. Inject Styles
+    const customCSS = GM_getResourceText("customCSS");
+    GM_addStyle(customCSS);
+
+    // 2. Load SVG resources
+    window.logoSVG = GM_getResourceText("ocpLogo");
+    window.secondaryLogoSVG = GM_getResourceText("secondaryLogo");
+    window.sidebarLogoSVG = GM_getResourceText("avevaLogo");
+
+    // 3. Wait for the Target Container to exist
+    const targetContainer = await waitForElement(TARGET_CONTAINER_SELECTOR);
+
+    // 4. Inject HTML
+    targetContainer.insertAdjacentHTML("afterbegin", generateCustomMenuHTML());
+
+    // 5. Inject additional UI elements
+    injectSidebarLogo();
+    injectLiveDate();
+    injectSecondaryLogo();
+
+    // 6. Attach Event Listeners
+    attachDropdownHoverListeners();
+    attachNavigationListeners();
+    attachUtilityListeners();
+
+    console.log(
+      "%c✅ Dynamic & Responsive PI Vision Navbar Initialized!",
+      "color: green; font-size: 14px; font-weight: bold;"
+    );
+  }
+
+  // =================================================================
+  // START UP LOGIC (SPA handling)
+  // =================================================================
+
+  // 1. Initial run on page load
+  initializeMenu();
+
+  // 2. Handle PI Vision's Single Page Application (SPA) navigation
+  window.addEventListener("hashchange", initializeMenu, false);
+})();
