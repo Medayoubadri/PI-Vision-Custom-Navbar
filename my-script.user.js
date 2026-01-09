@@ -1,9 +1,11 @@
 // ==UserScript==
 // @name          PI Vision Custom Dropdown Menu
-// @namespace     http://tampermonkey.net/
-// @version       0.9
+// @namespace     https://github.com/Medayoubadri/PI-Vision-Custom-Navbar
+// @version       0.9.0
 // @description   A custom navbar menu for PI Vision
 // @author        MEDAYOUBADRI
+// @updateURL     https://raw.githubusercontent.com/Medayoubadri/PI-Vision-Custom-Navbar/main/my-script.user.js
+// @downloadURL   https://raw.githubusercontent.com/Medayoubadri/PI-Vision-Custom-Navbar/main/my-script.user.js
 // @match         *://pimining.ocpgroup.ma/PIVision/*
 // @grant         GM_addStyle
 // @run-at        document-start
