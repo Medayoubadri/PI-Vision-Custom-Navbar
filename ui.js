@@ -216,10 +216,14 @@ function injectColorPickerPopup() {
           <input type="text" id="piv-hex-input" class="piv-hex-input" placeholder="#000000" maxlength="7" />
         </div>
 
-        <div class="piv-color-palette-group">
-          <label>Palette de Couleurs</label>
-          <div class="piv-color-palette-grid" id="piv-color-palette-grid">
-            <!-- Color swatches will be generated here -->
+        <div class="piv-hsl-picker-group">
+          <label>Sélecteur de Couleur</label>
+          <div class="piv-sl-area" id="piv-sl-area">
+            <div class="piv-sl-cursor" id="piv-sl-cursor"></div>
+          </div>
+          <div class="piv-hue-slider-wrapper">
+            <label>Teinte</label>
+            <input type="range" id="piv-hue-slider" class="piv-hue-slider" min="0" max="360" value="0" />
           </div>
         </div>
 
@@ -316,8 +320,16 @@ function initializeCustomColorPicker() {
   bSlider?.addEventListener("input", updateColorFromSliders);
   hexInput?.addEventListener("change", updateColorFromHex);
 
-  // Initialize custom color palette grid
-  initializeColorPaletteGrid(rSlider, gSlider, bSlider, hexInput, swatch);
+  // Initialize HSL color picker
+  initializeHSLColorPicker(currentColor, (rgb) => {
+    currentColor.r = rgb.r;
+    currentColor.g = rgb.g;
+    currentColor.b = rgb.b;
+    rSlider.value = rgb.r;
+    gSlider.value = rgb.g;
+    bSlider.value = rgb.b;
+    updateColorFromSliders();
+  });
 
   // Apply custom color
   applyBtn?.addEventListener("click", () => {
@@ -343,64 +355,107 @@ function initializeCustomColorPicker() {
 }
 
 /**
- * Initialize custom color palette grid
+ * Initialize HSL color picker
  */
-function initializeColorPaletteGrid(rSlider, gSlider, bSlider, hexInput, swatch) {
-  const grid = document.getElementById("piv-color-palette-grid");
-  if (!grid) return;
+function initializeHSLColorPicker(initialColor, onColorChange) {
+  const slArea = document.getElementById("piv-sl-area");
+  const slCursor = document.getElementById("piv-sl-cursor");
+  const hueSlider = document.getElementById("piv-hue-slider");
+  
+  if (!slArea || !slCursor || !hueSlider) return;
 
-  // Curated color palette with vibrant and useful colors
-  const colors = [
-    // Reds
-    "#ef4444", "#dc2626", "#b91c1c", "#7f1d1d",
-    // Oranges
-    "#f97316", "#ea580c", "#c2410c", "#9a3412",
-    // Yellows
-    "#fbbf24", "#f59e0b", "#d97706", "#b45309",
-    // Greens
-    "#22c55e", "#16a34a", "#15803d", "#14532d",
-    // Teals
-    "#14b8a6", "#0d9488", "#0f766e", "#134e4a",
-    // Cyans
-    "#06b6d4", "#0891b2", "#0e7490", "#155e75",
-    // Blues
-    "#3b82f6", "#2563eb", "#1d4ed8", "#1e3a8a",
-    // Indigos
-    "#6366f1", "#4f46e5", "#4338ca", "#3730a3",
-    // Purples
-    "#a855f7", "#9333ea", "#7e22ce", "#6b21a8",
-    // Pinks
-    "#ec4899", "#db2777", "#be185d", "#9f1239",
-    // Grays
-    "#6b7280", "#4b5563", "#374151", "#1f2937",
-    // Dark
-    "#18181b", "#0f172a", "#020617", "#000000",
-  ];
+  let hue = 0;
+  let sat = 100;
+  let light = 50;
 
-  // Generate color swatches
-  colors.forEach((color) => {
-    const swatch = document.createElement("div");
-    swatch.className = "piv-palette-swatch";
-    swatch.style.backgroundColor = color;
-    swatch.title = color;
-    
-    swatch.addEventListener("click", () => {
-      const rgb = hexToRgb(color);
-      if (rgb) {
-        rSlider.value = rgb.r;
-        gSlider.value = rgb.g;
-        bSlider.value = rgb.b;
-        hexInput.value = color;
-        document.getElementById("piv-color-swatch").style.backgroundColor = color;
-        
-        document.getElementById("piv-r-value").textContent = rgb.r;
-        document.getElementById("piv-g-value").textContent = rgb.g;
-        document.getElementById("piv-b-value").textContent = rgb.b;
+  // Convert HSL to RGB
+  function hslToRgb(h, s, l) {
+    s /= 100;
+    l /= 100;
+    const k = n => (n + h / 30) % 12;
+    const a = s * Math.min(l, 1 - l);
+    const f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+    return {
+      r: Math.round(255 * f(0)),
+      g: Math.round(255 * f(8)),
+      b: Math.round(255 * f(4))
+    };
+  }
+
+  // Convert RGB to HSL
+  function rgbToHsl(r, g, b) {
+    r /= 255; g /= 255; b /= 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h, s, l = (max + min) / 2;
+
+    if (max === min) {
+      h = s = 0;
+    } else {
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+        case g: h = ((b - r) / d + 2) / 6; break;
+        case b: h = ((r - g) / d + 4) / 6; break;
       }
-    });
+    }
+    return { h: h * 360, s: s * 100, l: l * 100 };
+  }
+
+  // Update color picker display
+  function updatePicker() {
+    const rgb = hslToRgb(hue, sat, light);
+    onColorChange(rgb);
     
-    grid.appendChild(swatch);
+    // Update SL area background with current hue
+    slArea.style.background = 
+      `linear-gradient(to top, black, transparent),
+       linear-gradient(to right, white, hsl(${hue}, 100%, 50%))`;
+  }
+
+  // Hue slider event
+  hueSlider.addEventListener("input", (e) => {
+    hue = parseInt(e.target.value);
+    updatePicker();
   });
+
+  // Saturation/Lightness area events
+  slArea.addEventListener("mousedown", (e) => {
+    const rect = slArea.getBoundingClientRect();
+
+    function move(ev) {
+      const x = Math.max(0, Math.min(ev.clientX - rect.left, rect.width));
+      const y = Math.max(0, Math.min(ev.clientY - rect.top, rect.height));
+
+      sat = Math.round((x / rect.width) * 100);
+      light = Math.round(100 - (y / rect.height) * 100);
+
+      slCursor.style.left = x + "px";
+      slCursor.style.top = y + "px";
+
+      updatePicker();
+    }
+
+    move(e);
+    window.addEventListener("mousemove", move);
+    window.addEventListener("mouseup", () => {
+      window.removeEventListener("mousemove", move);
+    }, { once: true });
+  });
+
+  // Initialize with current color
+  const hsl = rgbToHsl(initialColor.r, initialColor.g, initialColor.b);
+  hue = hsl.h;
+  sat = hsl.s;
+  light = hsl.l;
+  hueSlider.value = hue;
+  
+  // Position cursor
+  const rect = slArea.getBoundingClientRect();
+  slCursor.style.left = (sat / 100) * rect.width + "px";
+  slCursor.style.top = ((100 - light) / 100) * rect.height + "px";
+  
+  updatePicker();
 }
 
 /**
