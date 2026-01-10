@@ -8,7 +8,6 @@
   justify-content: space-between;
   font-family: "Poppins", Arial, sans-serif;
   padding: 10px 15px;
-  transition: all 0.3s ease;
 }
 
 /* Styles for the minimized/hidden bar */
@@ -20,6 +19,7 @@
   left: auto;
   border-radius: 12px 0 0 12px;
   justify-self: end;
+  transition: all 0.3s ease;
 }
 
 /* Secondary logo styles */
@@ -189,10 +189,11 @@
 }
 
 .piv-btn-cog {
-  width: 25px;
-  height: auto;
-  filter: brightness(5);
+  font-size: 18px;
+  color: inherit;
+  transition: transform 0.5s ease;
 }
+
 .piv-utility-container.active .piv-utility-btn .piv-btn-cog {
   transform: rotate(180deg);
   transition: transform 0.5s ease;

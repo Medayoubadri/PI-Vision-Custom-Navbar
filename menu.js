@@ -357,7 +357,9 @@ const utilityMenuItems = [
 const renderMenuItem = (item, isSubmenu = false) => `
   <i class="fa-solid ${item.icon} piv-icon"></i>
   <span>${item.text}</span>
-  ${isSubmenu ? '<i class="fa-solid fa-chevron-right piv-arrow-right"></i>' : ''}
+  ${
+    isSubmenu ? '<i class="fa-solid fa-chevron-right piv-arrow-right"></i>' : ""
+  }
 `;
 
 /**
@@ -366,17 +368,20 @@ const renderMenuItem = (item, isSubmenu = false) => `
  * @returns {string}
  */
 function renderMenuItems(items) {
-  return items.map((item) => {
-    // EXTERNAL LINK
-    if (item.url) {
-      return `<a href="${item.url}" target="_blank" rel="noopener noreferrer" class="piv-menu-item">
+  return items
+    .map((item) => {
+      // EXTERNAL LINK
+      if (item.url) {
+        return `<a href="${
+          item.url
+        }" target="_blank" rel="noopener noreferrer" class="piv-menu-item">
         ${renderMenuItem(item)}
       </a>`;
-    }
+      }
 
-    // NESTED SUBMENU
-    if (item.children?.length) {
-      return `<div class="piv-menu-wrapper">
+      // NESTED SUBMENU
+      if (item.children?.length) {
+        return `<div class="piv-menu-wrapper">
         <div class="piv-menu-item piv-submenu-title">
           ${renderMenuItem(item, true)}
         </div>
@@ -384,13 +389,16 @@ function renderMenuItems(items) {
           ${renderMenuItems(item.children)}
         </div>
       </div>`;
-    }
+      }
 
-    // INTERNAL PI VISION LINK
-    return `<a href="${item.hash}" data-hash="${item.hash}" class="piv-menu-item">
+      // INTERNAL PI VISION LINK
+      return `<a href="${item.hash}" data-hash="${
+        item.hash
+      }" class="piv-menu-item">
       ${renderMenuItem(item)}
     </a>`;
-  }).join("");
+    })
+    .join("");
 }
 
 /**
@@ -401,7 +409,8 @@ function renderMenuItems(items) {
  */
 function generateDropdownHTML(menu, index) {
   const sanitizedId = menu.title.replace(/[^a-zA-Z0-9]/g, "_");
-  const divider = index < menuData.length - 1 ? '<div class="piv-menu-divider"></div>' : '';
+  const divider =
+    index < menuData.length - 1 ? '<div class="piv-menu-divider"></div>' : "";
 
   return `<div class="piv-dropdown-item-container" data-id="${sanitizedId}">
     <button class="piv-dropbtn">
@@ -492,7 +501,7 @@ function generateUtilityDropdown() {
   return `
         <div class="piv-dropdown-item-container piv-utility-container">
             <button class="piv-dropbtn piv-utility-btn">
-                <img class="piv-btn-cog" src="/PIVision/Images/Settings64x64.png"/>
+            <i class="piv-btn-cog fa-solid fa-gear" ></i>
             </button>
             <div class="piv-dropdown-content piv-utility-content">
                 ${utilityItemsHTML}

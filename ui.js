@@ -334,9 +334,11 @@ const UTILITY_ACTIONS = {
 
     popup.querySelector(".piv-color-close").onclick = () =>
       popup.classList.remove("active");
-    popup.querySelectorAll("[data-color]").forEach((btn) =>
-      btn.onclick = () => applyPIBackgroundColor(btn.dataset.color)
-    );
+    popup
+      .querySelectorAll("[data-color]")
+      .forEach(
+        (btn) => (btn.onclick = () => applyPIBackgroundColor(btn.dataset.color))
+      );
     popup.querySelector(".piv-color-input").oninput = (e) =>
       applyPIBackgroundColor(e.target.value);
   },
@@ -371,7 +373,9 @@ function attachUtilityListeners() {
 
       // Close menu for non-navigation actions
       if (!["set-fullscreen-mode", "refresh-page"].includes(action)) {
-        item.closest(".piv-dropdown-item-container")?.classList.remove("active");
+        item
+          .closest(".piv-dropdown-item-container")
+          ?.classList.remove("active");
       }
     });
   });
