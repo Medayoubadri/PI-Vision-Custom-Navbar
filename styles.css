@@ -1101,7 +1101,7 @@
 }
 
 .piv-mobile-menu-toggle.active span:nth-child(1) {
-  transform: rotate(45deg) translate(6px, 6px);
+  transform: rotate(45deg) translate(9px, 9px);
 }
 
 .piv-mobile-menu-toggle.active span:nth-child(2) {
@@ -1140,7 +1140,7 @@
 /* Laptop (1366px - most common laptop resolution) */
 @media (max-width: 1366px) {
   .piv-ocp-logo svg {
-    height: 36px;
+    height: 32px;
   }
 
   .piv-dropbtn {
@@ -1164,7 +1164,7 @@
 /* Small Laptop (1280px) */
 @media (max-width: 1280px) {
   .piv-ocp-logo svg {
-    height: 34px;
+    height: 28px;
   }
 
   .piv-dropbtn {
@@ -1196,7 +1196,7 @@
   }
 
   .piv-ocp-logo svg {
-    height: 32px;
+    height: 26px;
   }
 
   .piv-dropbtn {
@@ -1346,7 +1346,7 @@
   }
 
   .piv-ocp-logo svg {
-    height: 26px;
+    height: 22px;
   }
 
   .piv-dropbtn {
