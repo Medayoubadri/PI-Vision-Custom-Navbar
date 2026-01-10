@@ -1,7 +1,7 @@
 /* Main Header Bar */
 .piv-custom-header-bar {
   position: relative;
-  height: 36px;
+  /* height: 36px; */
   background-color: linear-gradient(to right, #072c50 0, #091d3a 100%);
   display: flex;
   align-items: center;
@@ -52,7 +52,7 @@
   display: flex;
   font-size: 16px;
   font-weight: 500;
-  color: #ffffffcc;
+  color: inherit;
   letter-spacing: 0.3px;
   white-space: nowrap;
   font-family: "Poppins", Arial, sans-serif;
