@@ -1,7 +1,7 @@
 /* Main Header Bar */
 .piv-custom-header-bar {
   position: relative;
-  height: fit-content;
+  height: 36px;
   background-color: linear-gradient(to right, #072c50 0, #091d3a 100%);
   display: flex;
   align-items: center;
@@ -131,7 +131,7 @@
   display: flex;
   align-items: center;
   background-color: transparent;
-  color: white;
+  color: inherit;
   padding-inline: 16px;
   font-size: 14px;
   font-weight: 600;
