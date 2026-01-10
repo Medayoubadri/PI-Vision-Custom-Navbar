@@ -2,7 +2,7 @@
 .piv-custom-header-bar {
   position: relative;
   /* height: 36px; */
-  background-color: linear-gradient(to right, #072c50 0, #091d3a 100%);
+  background: linear-gradient(to right, #072c50 0, #091d3a 100%);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -99,31 +99,21 @@
 /* Menu Bar Container */
 .piv-menu-bar {
   display: flex;
-  flex-grow: 1;
-  height: 100%;
-  align-items: stretch;
-  justify-content: center; /* Center the main menu items */
-  margin: 0 20px;
+  flex-direction: row;
 }
 
 /* Vertical Divider */
 .piv-menu-divider {
   width: 2px;
+  height: 15px;
   background-color: rgb(255 255 255 / 30%);
-  margin: 18px 10px;
+  margin: 10px;
   border-radius: 50px;
 }
 
 /* Individual Dropdown Container */
 .piv-dropdown-item-container {
   position: relative;
-  display: flex;
-  text-align: center;
-  align-items: center;
-  justify-content: center;
-  /* Allow menu items to shrink/grow slightly */
-  flex-shrink: 1;
-  flex-grow: 0;
 }
 
 /* Dropdown Button (Title) */
@@ -132,10 +122,9 @@
   align-items: center;
   background-color: transparent;
   color: inherit;
-  padding-inline: 16px;
+  padding: 12px;
   font-size: 14px;
   font-weight: 600;
-  line-height: 50px;
   height: 100%;
   border: none;
   cursor: pointer;
