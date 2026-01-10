@@ -7,6 +7,9 @@
 // @updateURL     https://raw.githubusercontent.com/Medayoubadri/PI-Vision-Custom-Navbar/main/main.user.js
 // @downloadURL   https://raw.githubusercontent.com/Medayoubadri/PI-Vision-Custom-Navbar/main/main.user.js
 // @match         *://pimining.ocpgroup.ma/PIVision/*
+// @match         http://localhost:*/*
+// @match         http://127.0.0.1:*/*
+// @match         file:///*
 // @require       https://raw.githubusercontent.com/Medayoubadri/PI-Vision-Custom-Navbar/main/menu.js
 // @require       https://raw.githubusercontent.com/Medayoubadri/PI-Vision-Custom-Navbar/main/ui.js
 // @resource      customCSS https://raw.githubusercontent.com/Medayoubadri/PI-Vision-Custom-Navbar/main/styles.css
@@ -25,10 +28,14 @@
   // MAIN ENTRY POINT - PI Vision Custom Navbar
   // =================================================================
 
-  // Load SVG resources and make them globally available
-  window.logoSVG = GM_getResourceText("ocpLogo");
-  window.secondaryLogoSVG = GM_getResourceText("secondaryLogo");
-  window.sidebarLogoSVG = GM_getResourceText("avevaLogo");
+  // Developer Mode Detection (auto-enabled for localhost/file)
+  const DEV_MODE = window.location.hostname === 'localhost' 
+                   || window.location.hostname === '127.0.0.1'
+                   || window.location.protocol === 'file:';
+
+  if (DEV_MODE) {
+    console.log('%c🔧 Developer Mode Enabled', 'color: orange; font-weight: bold;');
+  }
 
   /* Target class/container */
   const TARGET_CONTAINER_SELECTOR = ".header-pane";
@@ -99,7 +106,7 @@
       currentHash.startsWith(targetHash)
     );
 
-    if (!isAllowed) {
+    if (!isAllowed && !DEV_MODE) {
       // Remove the menu if the user navigates away from an allowed page
       if (customHeader) {
         customHeader.remove();
@@ -107,6 +114,10 @@
       }
       console.log("Menu script skipped: Current view is not a target view.");
       return;
+    }
+
+    if (DEV_MODE && !isAllowed) {
+      console.log('%c🔧 DEV MODE: View filtering bypassed', 'color: orange;');
     }
 
     // Initialize Font awesome icons

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PI Vision Navbar - Development Environment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1e293b;
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+
+        /* PI Vision Structure Mock */
+        #viewport {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-pane {
+            background: #0f172a;
+            height: fit-content;
+            border-bottom: 1px solid #334155;
+            position: relative;
+            z-index: 1000;
+        }
+
+        #shell-splitter-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        #sidebar-pane {
+            width: 60px;
+            background: #0f172a;
+            border-right: 1px solid #334155;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+        }
+
+        .c-header {
+            background: #0f172a;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .c-app-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #content-pane {
+            flex: 1;
+            padding: 20px;
+            overflow: auto;
+        }
+
+        /* Developer Info Panel */
+        .dev-info {
+            background: #334155;
+            border: 2px solid #f59e0b;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px;
+        }
+
+        .dev-info h1 {
+            color: #f59e0b;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dev-info h2 {
+            color: #60a5fa;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .dev-info p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .dev-info ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .dev-info li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .dev-info code {
+            background: #1e293b;
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #86efac;
+            font-family: 'Courier New', monospace;
+        }
+
+        .status-badge {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .warning-box {
+            background: #7c2d12;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .success-box {
+            background: #064e3b;
+            border-left: 4px solid #10b981;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .feature-card {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #475569;
+        }
+
+        .feature-card h3 {
+            color: #60a5fa;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .feature-card p {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="viewport">
+        <!-- Header Pane - Your navbar will inject here -->
+        <div class="header-pane"></div>
+
+        <div id="shell-splitter-container">
+            <!-- Sidebar Pane - For sidebar logo -->
+            <div id="sidebar-pane"></div>
+
+            <!-- Main Content Area -->
+            <div id="content-pane">
+                <!-- Secondary Header - For secondary logo and live date -->
+                <div class="c-header">
+                    <div class="c-app-logo"></div>
+                    <div style="flex: 1;"></div>
+                </div>
+
+                <!-- Developer Information Panel -->
+                <div class="dev-info">
+                    <h1>
+                        🛠️ PI Vision Custom Navbar - Developer Mode
+                        <span class="status-badge">DEV ACTIVE</span>
+                    </h1>
+
+                    <div class="success-box">
+                        <strong>✅ Development Environment Ready!</strong>
+                        <p>Your custom navbar should be visible at the top of this page. All features are enabled for
+                            testing.</p>
+                    </div>
+
+                    <h2>📋 What's Running:</h2>
+                    <ul>
+                        <li><strong>Developer Mode:</strong> Auto-detected (localhost/file://)</li>
+                        <li><strong>View Filtering:</strong> Disabled (all views accessible)</li>
+                        <li><strong>Menu System:</strong> Full menu with 7 station categories</li>
+                        <li><strong>UI Features:</strong> All interactive elements enabled</li>
+                        <li><strong>Resources:</strong> CSS, SVG logos loaded via @resource</li>
+                    </ul>
+
+                    <h2>🎯 Testing Features:</h2>
+                    <div class="feature-list">
+                        <div class="feature-card">
+                            <h3>🎨 Theme Picker</h3>
+                            <p>Click the gear icon → "Couleur de fond" to test the color picker</p>
+                        </div>
+                        <div class="feature-card">
+                            <h3>📺 Fullscreen Mode</h3>
+                            <p>Click gear icon → "Mode plein écran" to toggle fullscreen</p>
+                        </div>
+                        <div class="feature-card">
+                            <h3>👁️ Hide/Show Navbar</h3>
+                            <p>Click gear icon → "Masquer la Barre" to collapse navbar</p>
+                        </div>
+                        <div class="feature-card">
+                            <h3>🔗 Menu Navigation</h3>
+                            <p>Hover over station menus to see dropdowns and nested items</p>
+                        </div>
+                    </div>
+
+                    <h2>🚀 How to Use:</h2>
+                    <ol style="margin-left: 20px; line-height: 2;">
+                        <li>Install the Tampermonkey script (<code>main.user.js</code>)</li>
+                        <li>Open this <code>dev.html</code> file in your browser</li>
+                        <li>The navbar will automatically inject and function fully</li>
+                        <li>Test all features without needing access to the production PI Vision</li>
+                    </ol>
+
+                    <div class="warning-box">
+                        <strong>⚠️ Production Mode:</strong>
+                        <p>When deployed to <code>pimining.ocpgroup.ma/PIVision/*</code>, Developer Mode will be
+                            automatically disabled and view filtering will be enforced.</p>
+                    </div>
+
+                    <h2>🔧 Developer Notes:</h2>
+                    <ul>
+                        <li><strong>Auto-Detection:</strong> DEV_MODE is enabled when hostname is
+                            <code>localhost</code>, <code>127.0.0.1</code>, or protocol is <code>file:</code></li>
+                        <li><strong>Console Logs:</strong> Check browser console for debug messages (orange = dev mode)
+                        </li>
+                        <li><strong>Local Resources:</strong> For local development, you may need to adjust @require
+                            URLs to local files</li>
+                        <li><strong>Hot Reload:</strong> Refresh the page to see changes after editing files</li>
+                    </ul>
+
+                    <h2>📁 Project Structure:</h2>
+                    <pre style="background: #1e293b; padding: 15px; border-radius: 4px; overflow-x: auto;"><code>PI-Vision-Custom-Navbar/
+├── main.user.js        ← Entry point (install this in Tampermonkey)
+├── menu.js             ← Menu data & HTML generation
+├── ui.js               ← UI functions & event handlers
+├── styles.css          ← All CSS styles
+├── ocp-logo.svg        ← Main OCP logo
+├── secondary-logo.svg  ← Pipeline Khouribga Jorf logo
+├── aveva-logo.svg      ← Sidebar AVEVA logo
+└── dev.html            ← This development test page</code></pre>
+
+                    <h2>🎓 Next Steps:</h2>
+                    <ul>
+                        <li>Make changes to <code>menu.js</code>, <code>ui.js</code>, or <code>styles.css</code></li>
+                        <li>Refresh this page to see your changes</li>
+                        <li>Test all functionality before deploying to production</li>
+                        <li>When ready, push changes to GitHub and update the script</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Log developer mode status
+        console.log('%c🛠️ PI Vision Development Environment', 'color: #f59e0b; font-size: 16px; font-weight: bold;');
+        console.log('%cThis is a mock PI Vision environment for testing the custom navbar.', 'color: #94a3b8;');
+        console.log('%cThe navbar should appear at the top of this page.', 'color: #94a3b8;');
+
+        // Simulate hash changes for testing
+        window.addEventListener('hashchange', () => {
+            console.log(`%cHash changed to: ${window.location.hash}`, 'color: #60a5fa;');
+        });
+    </script>
+</body>
+
+</html>
