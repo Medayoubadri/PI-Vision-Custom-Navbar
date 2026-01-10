@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          PI Vision Custom Dropdown Menu
 // @namespace     https://github.com/Medayoubadri/PI-Vision-Custom-Navbar
-// @version       0.9.2-DEV-2.3
+// @version       0.9.2-DEV-2.4
 // @description   A custom navbar menu for PI Vision
 // @author        MEDAYOUBADRI
 // @updateURL     https://raw.githubusercontent.com/Medayoubadri/PI-Vision-Custom-Navbar/main/main.user.js
@@ -108,6 +108,9 @@
     // Early exit if menu already exists
     if (customHeader) return;
 
+    // Show loading animation
+    showLoadingAnimation();
+
     // View filtering (combined logic)
     const isAllowed = ALLOWED_VIEW_HASHES.some((h) =>
       location.hash.startsWith(h)
@@ -163,6 +166,9 @@
       "%c✅ PI Vision Navbar Initialized!",
       "color: green; font-size: 14px; font-weight: bold;"
     );
+
+    // Hide loading animation
+    hideLoadingAnimation();
   }
 
   // =================================================================

@@ -989,3 +989,323 @@
 .t-header {
   background-color: #2a3e5d !important;
 }
+
+/* ============================================
+   LOADING ANIMATION
+   ============================================ */
+
+.piv-loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999999999;
+  animation: fadeIn 0.3s ease;
+}
+
+.piv-loading-overlay.piv-loading-fade-out {
+  animation: fadeOut 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.piv-loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.piv-loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(99, 102, 241, 0.2);
+  border-top-color: #6366f1;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.piv-loading-text {
+  color: #e2e8f0;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* ============================================
+   MOBILE MENU TOGGLE BUTTON
+   ============================================ */
+
+.piv-mobile-menu-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 10;
+  margin-left: auto;
+  margin-right: 15px;
+}
+
+.piv-mobile-menu-toggle span {
+  width: 100%;
+  height: 3px;
+  background: #ffffff;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.piv-mobile-menu-toggle.active span:nth-child(1) {
+  transform: rotate(45deg) translateY(10px);
+}
+
+.piv-mobile-menu-toggle.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.piv-mobile-menu-toggle.active span:nth-child(3) {
+  transform: rotate(-45deg) translateY(-10px);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablet (Portrait) */
+@media (max-width: 1024px) {
+  .piv-custom-header-bar {
+    padding: 8px 12px;
+  }
+
+  .piv-logo-container {
+    padding: 0 8px;
+  }
+
+  .piv-ocp-logo svg {
+    height: 32px;
+  }
+
+  .piv-dropbtn {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .piv-live-date {
+    font-size: 14px;
+  }
+
+  .piv-secondary-logo svg {
+    height: 20px;
+  }
+
+  .piv-dropdown-content {
+    max-width: 250px;
+  }
+}
+
+/* Mobile (Landscape and below) */
+@media (max-width: 768px) {
+  .piv-mobile-menu-toggle {
+    display: flex;
+  }
+
+  .piv-custom-header-bar {
+    flex-wrap: wrap;
+    padding: 10px;
+  }
+
+  .piv-logo-container {
+    order: 1;
+    flex: 0 0 auto;
+  }
+
+  .piv-mobile-menu-toggle {
+    order: 2;
+  }
+
+  .piv-menu-bar {
+    order: 3;
+    flex: 1 1 100%;
+    flex-direction: column;
+    background: rgba(15, 23, 42, 0.98);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.4s ease;
+    padding: 0;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+  }
+
+  .piv-menu-bar.piv-mobile-active {
+    max-height: calc(100vh - 60px);
+    padding: 12px 0;
+    overflow-y: auto;
+  }
+
+  .piv-menu-divider {
+    width: 90%;
+    height: 1px;
+    margin: 8px auto;
+  }
+
+  .piv-dropdown-item-container {
+    width: 100%;
+  }
+
+  .piv-dropbtn {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 14px 20px;
+    font-size: 15px;
+  }
+
+  .piv-dropdown-content {
+    position: static;
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    max-width: 100%;
+    margin: 0 20px;
+    margin-top: 8px;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2);
+    display: none;
+  }
+
+  .piv-dropdown-item-container.active .piv-dropdown-content {
+    display: flex;
+  }
+
+  .piv-utility-wrapper {
+    order: 4;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 10000;
+  }
+
+  .piv-utility-container .piv-dropdown-content {
+    right: 0;
+    bottom: 60px;
+    top: auto;
+  }
+
+  .piv-live-date {
+    display: none;
+  }
+
+  .piv-secondary-logo {
+    display: none;
+  }
+
+  /* Mobile theme picker adjustments */
+  .piv-theme-popup {
+    width: 95%;
+    max-width: 400px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .piv-theme-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .piv-custom-picker-panel {
+    width: 100%;
+    border-radius: 18px;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .piv-ocp-logo svg {
+    height: 28px;
+  }
+
+  .piv-dropbtn {
+    font-size: 14px;
+    padding: 12px 16px;
+  }
+
+  .piv-theme-popup {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 0;
+    height: 100vh;
+  }
+
+  .piv-theme-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .piv-custom-picker-panel {
+    border-radius: 0;
+  }
+
+  .piv-sl-area {
+    height: 120px;
+  }
+
+  .piv-sidebar-logo {
+    display: none;
+  }
+}
+
+/* Minimized state responsive adjustments */
+@media (max-width: 768px) {
+  .piv-custom-header-bar.piv-minimized {
+    width: 50px;
+    padding: 10px;
+    border-radius: 50%;
+  }
+}

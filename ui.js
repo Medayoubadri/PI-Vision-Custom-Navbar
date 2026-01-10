@@ -6,6 +6,35 @@
 const FULLSCREEN_CLASS = "piv-fullscreen-active";
 
 /**
+ * Show loading animation
+ */
+function showLoadingAnimation() {
+  if (document.getElementById("piv-loading-overlay")) return;
+
+  const loadingHTML = `
+    <div id="piv-loading-overlay" class="piv-loading-overlay">
+      <div class="piv-loading-content">
+        <div class="piv-loading-spinner"></div>
+        <div class="piv-loading-text">Chargement de la barre de navigation...</div>
+      </div>
+    </div>
+  `;
+
+  document.body.insertAdjacentHTML("beforeend", loadingHTML);
+}
+
+/**
+ * Hide loading animation
+ */
+function hideLoadingAnimation() {
+  const overlay = document.getElementById("piv-loading-overlay");
+  if (overlay) {
+    overlay.classList.add("piv-loading-fade-out");
+    setTimeout(() => overlay.remove(), 500);
+  }
+}
+
+/**
  * Helper to update icon and label based on toggle state
  * @param {Element} item - The menu item element
  * @param {boolean} condition - Toggle condition
@@ -146,7 +175,7 @@ function injectColorPickerPopup() {
           <span>Nuit Profonde</span>
         </div>
 
-        <div class="piv-theme-card" data-color="linear-gradient(135deg, #667eea 0%, #764ba2 100%)">
+        <div class="piv-theme-card" data-color="linear-gradient(135deg, #7566ea 0%, #401e63 100%)">
           <svg viewBox="0 0 120 70">
             <defs>
               <linearGradient id="grad-ocean" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -536,14 +565,14 @@ function applyPIBackgroundColor(color) {
 
   // Detect if it's a gradient or solid color
   const isGradient = color.startsWith("linear-gradient");
-  
+
   // For gradients, assume dark background (most gradients are dark)
   // For solid colors, calculate brightness
   const dark = isGradient ? true : isColorDark(color);
   const textColor = dark ? "#ffffffcc" : "#000000cc";
 
   // Use background-image for gradients, background for solid colors
-  const bgProperty = isGradient 
+  const bgProperty = isGradient
     ? `background-image: ${color} !important; background-color: #0f172a !important;`
     : `background: ${color} !important;`;
 
@@ -638,6 +667,25 @@ function attachDropdownHoverListeners() {
       container.classList.remove("active");
     });
   });
+
+  // Mobile menu toggle
+  const mobileToggle = document.querySelector(".piv-mobile-menu-toggle");
+  const menuBar = document.querySelector(".piv-menu-bar");
+  
+  if (mobileToggle && menuBar) {
+    mobileToggle.addEventListener("click", () => {
+      menuBar.classList.toggle("piv-mobile-active");
+      mobileToggle.classList.toggle("active");
+    });
+
+    // Close mobile menu when clicking outside
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".piv-menu-bar") && !e.target.closest(".piv-mobile-menu-toggle")) {
+        menuBar.classList.remove("piv-mobile-active");
+        mobileToggle.classList.remove("active");
+      }
+    });
+  }
 }
 
 /**
@@ -750,7 +798,7 @@ const UTILITY_ACTIONS = {
         applyPIBackgroundColor(color);
         PIVStorage.saveTheme(color, "preset");
         updateThemeSelection(color, false);
-        
+
         // Close popup after selection
         setTimeout(() => {
           popup.classList.remove("active");

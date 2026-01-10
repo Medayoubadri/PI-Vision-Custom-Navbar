@@ -522,6 +522,11 @@ function generateCustomMenuHTML() {
                   ${logoSVG}
                  </a>
            </div>
+            <button class="piv-mobile-menu-toggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
             <div class="piv-menu-bar">
                 ${menuData.map(generateDropdownHTML).join("")}
             </div>
