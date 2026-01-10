@@ -271,9 +271,10 @@ function initializeCustomColorPicker() {
 
   // Load saved custom color or use default
   const savedTheme = PIVStorage.getTheme();
-  const defaultColor = savedTheme?.type === "custom" 
-    ? hexToRgb(savedTheme.color) 
-    : { r: 15, g: 23, b: 42 };
+  const defaultColor =
+    savedTheme?.type === "custom"
+      ? hexToRgb(savedTheme.color)
+      : { r: 15, g: 23, b: 42 };
   let currentColor = defaultColor;
 
   // Toggle custom picker panel
@@ -361,7 +362,7 @@ function initializeHSLColorPicker(initialColor, onColorChange) {
   const slArea = document.getElementById("piv-sl-area");
   const slCursor = document.getElementById("piv-sl-cursor");
   const hueSlider = document.getElementById("piv-hue-slider");
-  
+
   if (!slArea || !slCursor || !hueSlider) return;
 
   let hue = 0;
@@ -372,21 +373,27 @@ function initializeHSLColorPicker(initialColor, onColorChange) {
   function hslToRgb(h, s, l) {
     s /= 100;
     l /= 100;
-    const k = n => (n + h / 30) % 12;
+    const k = (n) => (n + h / 30) % 12;
     const a = s * Math.min(l, 1 - l);
-    const f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+    const f = (n) =>
+      l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
     return {
       r: Math.round(255 * f(0)),
       g: Math.round(255 * f(8)),
-      b: Math.round(255 * f(4))
+      b: Math.round(255 * f(4)),
     };
   }
 
   // Convert RGB to HSL
   function rgbToHsl(r, g, b) {
-    r /= 255; g /= 255; b /= 255;
-    const max = Math.max(r, g, b), min = Math.min(r, g, b);
-    let h, s, l = (max + min) / 2;
+    r /= 255;
+    g /= 255;
+    b /= 255;
+    const max = Math.max(r, g, b),
+      min = Math.min(r, g, b);
+    let h,
+      s,
+      l = (max + min) / 2;
 
     if (max === min) {
       h = s = 0;
@@ -394,9 +401,15 @@ function initializeHSLColorPicker(initialColor, onColorChange) {
       const d = max - min;
       s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
       switch (max) {
-        case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
-        case g: h = ((b - r) / d + 2) / 6; break;
-        case b: h = ((r - g) / d + 4) / 6; break;
+        case r:
+          h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+          break;
+        case g:
+          h = ((b - r) / d + 2) / 6;
+          break;
+        case b:
+          h = ((r - g) / d + 4) / 6;
+          break;
       }
     }
     return { h: h * 360, s: s * 100, l: l * 100 };
@@ -406,10 +419,9 @@ function initializeHSLColorPicker(initialColor, onColorChange) {
   function updatePicker() {
     const rgb = hslToRgb(hue, sat, light);
     onColorChange(rgb);
-    
+
     // Update SL area background with current hue
-    slArea.style.background = 
-      `linear-gradient(to top, black, transparent),
+    slArea.style.background = `linear-gradient(to top, black, transparent),
        linear-gradient(to right, white, hsl(${hue}, 100%, 50%))`;
   }
 
@@ -438,9 +450,13 @@ function initializeHSLColorPicker(initialColor, onColorChange) {
 
     move(e);
     window.addEventListener("mousemove", move);
-    window.addEventListener("mouseup", () => {
-      window.removeEventListener("mousemove", move);
-    }, { once: true });
+    window.addEventListener(
+      "mouseup",
+      () => {
+        window.removeEventListener("mousemove", move);
+      },
+      { once: true }
+    );
   });
 
   // Initialize with current color
@@ -449,12 +465,12 @@ function initializeHSLColorPicker(initialColor, onColorChange) {
   sat = hsl.s;
   light = hsl.l;
   hueSlider.value = hue;
-  
+
   // Position cursor
   const rect = slArea.getBoundingClientRect();
   slCursor.style.left = (sat / 100) * rect.width + "px";
   slCursor.style.top = ((100 - light) / 100) * rect.height + "px";
-  
+
   updatePicker();
 }
 

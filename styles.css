@@ -371,7 +371,6 @@
   background: #1e293bef;
   border-radius: 18px;
   padding: 20px;
-  width: 620px;
   max-height: 90vh;
   z-index: 1000000000;
   box-shadow: 0px 30px 60px rgba(0, 0, 0, 0.5);
@@ -660,8 +659,7 @@
   position: relative;
   height: 140px;
   border-radius: 10px;
-  background:
-    linear-gradient(to top, black, transparent),
+  background: linear-gradient(to top, black, transparent),
     linear-gradient(to right, white, red);
   cursor: crosshair;
   border: 2px solid rgba(255, 255, 255, 0.1);
@@ -706,7 +704,8 @@
   outline: none;
   -webkit-appearance: none;
   cursor: pointer;
-  background: linear-gradient(to right,
+  background: linear-gradient(
+    to right,
     #ff0000 0%,
     #ffff00 17%,
     #00ff00 33%,
