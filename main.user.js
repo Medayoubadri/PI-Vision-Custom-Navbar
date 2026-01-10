@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          PI Vision Custom Dropdown Menu
 // @namespace     https://github.com/Medayoubadri/PI-Vision-Custom-Navbar
-// @version       0.9.2-DEV-2.6-1
+// @version       0.9.2-DEV-2.7
 // @description   A custom navbar menu for PI Vision
 // @author        MEDAYOUBADRI
 // @updateURL     https://raw.githubusercontent.com/Medayoubadri/PI-Vision-Custom-Navbar/main/main.user.js
@@ -106,10 +106,10 @@
     const customHeader = document.getElementById("piv-custom-header");
 
     // Early exit if menu already exists
-    if (customHeader) return;
-
-    // Show loading animation
-    showLoadingAnimation();
+    if (customHeader) {
+      hideLoadingAnimation();
+      return;
+    }
 
     // View filtering (combined logic)
     const isAllowed = ALLOWED_VIEW_HASHES.some((h) =>
@@ -118,6 +118,7 @@
 
     if (!isAllowed && !DEV_MODE) {
       console.log("Menu script skipped: Current view is not a target view.");
+      hideLoadingAnimation();
       return;
     }
 
@@ -170,12 +171,15 @@
     // Hide loading animation with small delay to ensure smooth transition
     setTimeout(() => {
       hideLoadingAnimation();
-    }, 3000);
+    }, 300);
   }
 
   // =================================================================
   // START UP LOGIC (SPA handling)
   // =================================================================
+
+  // Show loading animation immediately
+  showLoadingAnimation();
 
   // 1. Initial run on page load
   initializeMenu();
