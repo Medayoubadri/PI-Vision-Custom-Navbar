@@ -131,7 +131,7 @@ function injectColorPickerPopup() {
   const popupHTML = `
     <div id="piv-bg-color-popup" class="piv-theme-popup">
       <div class="piv-color-popup-header">
-        <span>Couleur de fond</span>
+        <span>Sélectionner un thème</span>
         <i class="fa-solid fa-xmark piv-color-close"></i>
       </div>
 
@@ -143,38 +143,208 @@ function injectColorPickerPopup() {
             <rect x="8" y="22" width="60" height="6" rx="2" fill="#64748b"/>
             <rect x="8" y="34" width="80" height="6" rx="2" fill="#475569"/>
           </svg>
-          <span>Sombre</span>
+          <span>Nuit Profonde</span>
         </div>
 
-        <div class="piv-theme-card" data-color="#1e293b">
+        <div class="piv-theme-card" data-color="#1e3a8a">
           <svg viewBox="0 0 120 70">
-            <rect width="120" height="70" rx="6" fill="#1e293b"/>
-            <rect x="8" y="10" width="40" height="6" rx="2" fill="#cbd5e1"/>
-            <rect x="8" y="22" width="60" height="6" rx="2" fill="#94a3b8"/>
-            <rect x="8" y="34" width="80" height="6" rx="2" fill="#64748b"/>
+            <rect width="120" height="70" rx="6" fill="#1e3a8a"/>
+            <rect x="8" y="10" width="40" height="6" rx="2" fill="#93c5fd"/>
+            <rect x="8" y="22" width="60" height="6" rx="2" fill="#60a5fa"/>
+            <rect x="8" y="34" width="80" height="6" rx="2" fill="#3b82f6"/>
           </svg>
-          <span>Ardoise</span>
+          <span>Océan Bleu</span>
         </div>
 
-        <div class="piv-theme-card" data-color="#f3f4f6">
+        <div class="piv-theme-card" data-color="#065f46">
           <svg viewBox="0 0 120 70">
-            <rect width="120" height="70" rx="6" fill="#f3f4f6"/>
-            <rect x="8" y="10" width="40" height="6" rx="2" fill="#374151"/>
-            <rect x="8" y="22" width="60" height="6" rx="2" fill="#1f2937"/>
-            <rect x="8" y="34" width="80" height="6" rx="2" fill="#111827"/>
+            <rect width="120" height="70" rx="6" fill="#065f46"/>
+            <rect x="8" y="10" width="40" height="6" rx="2" fill="#6ee7b7"/>
+            <rect x="8" y="22" width="60" height="6" rx="2" fill="#34d399"/>
+            <rect x="8" y="34" width="80" height="6" rx="2" fill="#10b981"/>
           </svg>
-          <span>Clair</span>
+          <span>Forêt Émeraude</span>
+        </div>
+
+        <div class="piv-theme-card" data-color="#c2410c">
+          <svg viewBox="0 0 120 70">
+            <rect width="120" height="70" rx="6" fill="#c2410c"/>
+            <rect x="8" y="10" width="40" height="6" rx="2" fill="#fed7aa"/>
+            <rect x="8" y="22" width="60" height="6" rx="2" fill="#fdba74"/>
+            <rect x="8" y="34" width="80" height="6" rx="2" fill="#fb923c"/>
+          </svg>
+          <span>Coucher de Soleil</span>
+        </div>
+
+        <div class="piv-theme-card" data-color="#581c87">
+          <svg viewBox="0 0 120 70">
+            <rect width="120" height="70" rx="6" fill="#581c87"/>
+            <rect x="8" y="10" width="40" height="6" rx="2" fill="#d8b4fe"/>
+            <rect x="8" y="22" width="60" height="6" rx="2" fill="#c084fc"/>
+            <rect x="8" y="34" width="80" height="6" rx="2" fill="#a855f7"/>
+          </svg>
+          <span>Nuit Violette</span>
+        </div>
+
+        <div class="piv-theme-card" data-color="#374151">
+          <svg viewBox="0 0 120 70">
+            <rect width="120" height="70" rx="6" fill="#374151"/>
+            <rect x="8" y="10" width="40" height="6" rx="2" fill="#d1d5db"/>
+            <rect x="8" y="22" width="60" height="6" rx="2" fill="#9ca3af"/>
+            <rect x="8" y="34" width="80" height="6" rx="2" fill="#6b7280"/>
+          </svg>
+          <span>Acier Gris</span>
         </div>
       </div>
 
       <div class="piv-theme-footer">
-        <input type="color" class="piv-color-input" />
-        <span>Couleur personnalisée</span>
+        <label class="piv-custom-color-toggle">
+          <input type="checkbox" id="piv-custom-toggle" />
+          <span>Couleur personnalisée</span>
+          <i class="fa-solid fa-chevron-right piv-toggle-arrow"></i>
+        </label>
+      </div>
+
+      <!-- Custom Color Picker Panel -->
+      <div id="piv-custom-picker-panel" class="piv-custom-picker-panel">
+        <div class="piv-picker-header">
+          <span>Couleur Personnalisée</span>
+        </div>
+        
+        <div class="piv-color-preview">
+          <div class="piv-color-swatch" id="piv-color-swatch"></div>
+          <input type="text" id="piv-hex-input" class="piv-hex-input" placeholder="#000000" maxlength="7" />
+        </div>
+
+        <div class="piv-color-sliders">
+          <div class="piv-slider-group">
+            <label>Rouge <span id="piv-r-value">0</span></label>
+            <input type="range" id="piv-r-slider" min="0" max="255" value="0" class="piv-slider piv-slider-r" />
+          </div>
+          <div class="piv-slider-group">
+            <label>Vert <span id="piv-g-value">0</span></label>
+            <input type="range" id="piv-g-slider" min="0" max="255" value="0" class="piv-slider piv-slider-g" />
+          </div>
+          <div class="piv-slider-group">
+            <label>Bleu <span id="piv-b-value">0</span></label>
+            <input type="range" id="piv-b-slider" min="0" max="255" value="0" class="piv-slider piv-slider-b" />
+          </div>
+        </div>
+
+        <div class="piv-picker-actions">
+          <button class="piv-picker-cancel">Annuler</button>
+          <button class="piv-picker-apply">Appliquer</button>
+        </div>
       </div>
     </div>
   `;
 
   document.body.insertAdjacentHTML("beforeend", popupHTML);
+  initializeCustomColorPicker();
+  initializeCustomColorPicker();
+}
+
+/**
+ * Initialize custom color picker functionality
+ */
+function initializeCustomColorPicker() {
+  const toggle = document.getElementById("piv-custom-toggle");
+  const panel = document.getElementById("piv-custom-picker-panel");
+  const rSlider = document.getElementById("piv-r-slider");
+  const gSlider = document.getElementById("piv-g-slider");
+  const bSlider = document.getElementById("piv-b-slider");
+  const hexInput = document.getElementById("piv-hex-input");
+  const swatch = document.getElementById("piv-color-swatch");
+  const applyBtn = document.querySelector(".piv-picker-apply");
+  const cancelBtn = document.querySelector(".piv-picker-cancel");
+
+  let currentColor = { r: 15, g: 23, b: 42 }; // Default color
+
+  // Toggle custom picker panel
+  toggle?.addEventListener("change", (e) => {
+    panel?.classList.toggle("active", e.target.checked);
+  });
+
+  // Update color from sliders
+  const updateColorFromSliders = () => {
+    currentColor.r = parseInt(rSlider.value);
+    currentColor.g = parseInt(gSlider.value);
+    currentColor.b = parseInt(bSlider.value);
+
+    const hex = rgbToHex(currentColor.r, currentColor.g, currentColor.b);
+    hexInput.value = hex;
+    swatch.style.backgroundColor = hex;
+
+    document.getElementById("piv-r-value").textContent = currentColor.r;
+    document.getElementById("piv-g-value").textContent = currentColor.g;
+    document.getElementById("piv-b-value").textContent = currentColor.b;
+  };
+
+  // Update color from hex input
+  const updateColorFromHex = () => {
+    let hex = hexInput.value.trim();
+    if (!hex.startsWith("#")) hex = "#" + hex;
+
+    const rgb = hexToRgb(hex);
+    if (rgb) {
+      currentColor = rgb;
+      rSlider.value = rgb.r;
+      gSlider.value = rgb.g;
+      bSlider.value = rgb.b;
+      swatch.style.backgroundColor = hex;
+
+      document.getElementById("piv-r-value").textContent = rgb.r;
+      document.getElementById("piv-g-value").textContent = rgb.g;
+      document.getElementById("piv-b-value").textContent = rgb.b;
+    }
+  };
+
+  rSlider?.addEventListener("input", updateColorFromSliders);
+  gSlider?.addEventListener("input", updateColorFromSliders);
+  bSlider?.addEventListener("input", updateColorFromSliders);
+  hexInput?.addEventListener("change", updateColorFromHex);
+
+  // Apply custom color
+  applyBtn?.addEventListener("click", () => {
+    const hex = rgbToHex(currentColor.r, currentColor.g, currentColor.b);
+    applyPIBackgroundColor(hex);
+    toggle.checked = false;
+    panel?.classList.remove("active");
+  });
+
+  // Cancel
+  cancelBtn?.addEventListener("click", () => {
+    toggle.checked = false;
+    panel?.classList.remove("active");
+  });
+
+  // Initialize with default color
+  updateColorFromSliders();
+}
+
+/**
+ * Convert RGB to Hex
+ * @param {number} r - Red value (0-255)
+ * @param {number} g - Green value (0-255)
+ * @param {number} b - Blue value (0-255)
+ * @returns {string} - Hex color
+ */
+function rgbToHex(r, g, b) {
+  return "#" + [r, g, b].map(x => x.toString(16).padStart(2, "0")).join("");
+}
+
+/**
+ * Convert Hex to RGB
+ * @param {string} hex - Hex color
+ * @returns {Object|null} - RGB object or null if invalid
+ */
+function hexToRgb(hex) {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
 }
 
 /**
@@ -332,15 +502,18 @@ const UTILITY_ACTIONS = {
     const popup = document.getElementById("piv-bg-color-popup");
     popup.classList.add("active");
 
-    popup.querySelector(".piv-color-close").onclick = () =>
+    popup.querySelector(".piv-color-close").onclick = () => {
       popup.classList.remove("active");
-    popup
-      .querySelectorAll("[data-color]")
-      .forEach(
-        (btn) => (btn.onclick = () => applyPIBackgroundColor(btn.dataset.color))
-      );
-    popup.querySelector(".piv-color-input").oninput = (e) =>
-      applyPIBackgroundColor(e.target.value);
+      // Reset custom picker panel
+      const toggle = document.getElementById("piv-custom-toggle");
+      const panel = document.getElementById("piv-custom-picker-panel");
+      if (toggle) toggle.checked = false;
+      if (panel) panel.classList.remove("active");
+    };
+
+    popup.querySelectorAll(".piv-theme-card").forEach((card) =>
+      card.onclick = () => applyPIBackgroundColor(card.dataset.color)
+    );
   },
 
   "set-fullscreen-mode": (item, header, mode) => {
