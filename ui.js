@@ -6,6 +6,24 @@
 const FULLSCREEN_CLASS = "piv-fullscreen-active";
 
 /**
+ * Helper to update icon and label based on toggle state
+ * @param {Element} item - The menu item element
+ * @param {boolean} condition - Toggle condition
+ * @param {Array} stateOff - [text, iconFrom, iconTo] for off state
+ * @param {Array} stateOn - [text, iconFrom, iconTo] for on state
+ */
+function updateIconAndLabel(item, condition, stateOff, stateOn) {
+  const icon = item.querySelector("i");
+  const label = item.querySelector("span");
+  if (!icon || !label) return;
+
+  const [text, iconFrom, iconTo] = condition ? stateOn : stateOff;
+  label.textContent = text;
+  icon.classList.remove(iconFrom);
+  icon.classList.add(iconTo);
+}
+
+/**
  * Wait for an element to appear in the DOM
  * @param {string} selector - CSS selector to wait for
  * @returns {Promise<Element>}
@@ -273,115 +291,88 @@ function attachDropdownHoverListeners() {
 
 /**
  * Attach click listeners for navigation links (Main and Nested)
+ * Uses event delegation for better performance
  */
 function attachNavigationListeners() {
-  const piVisionLinks = document.querySelectorAll(".piv-menu-item");
-  piVisionLinks.forEach((item) => {
-    item.addEventListener("click", function (event) {
-      const targetHash = item.getAttribute("data-hash");
+  const menuBar = document.querySelector(".piv-menu-bar");
+  if (!menuBar) return;
 
-      // If it's a menu-wrapper link (which has no hash), don't prevent default and let it bubble up
-      if (!targetHash) {
-        // This is the link that opens the nested submenu, so we do nothing.
-        return;
-      }
+  menuBar.addEventListener("click", (e) => {
+    const item = e.target.closest(".piv-menu-item");
+    if (!item) return;
 
-      event.preventDefault();
+    const targetHash = item.dataset.hash;
+    if (!targetHash) return; // Submenu title, let it bubble
 
-      // Use window.location.hash to navigate within PI Vision
-      window.location.hash = targetHash;
-      console.log(`Navigating to PI Vision Display: ${targetHash}`);
+    e.preventDefault();
+    window.location.hash = targetHash;
+    console.log(`Navigating to PI Vision Display: ${targetHash}`);
 
-      // Close the main menu after navigation
-      const mainContainer = item.closest(".piv-dropdown-item-container");
-      if (mainContainer) {
-        mainContainer.classList.remove("active");
-      }
-    });
+    // Close the dropdown
+    item.closest(".piv-dropdown-item-container")?.classList.remove("active");
   });
 }
+
+/**
+ * Utility action handlers
+ */
+const UTILITY_ACTIONS = {
+  "hide-navbar": (item, header) => {
+    const isMinimized = header.classList.toggle("piv-minimized");
+    updateIconAndLabel(
+      item,
+      isMinimized,
+      ["Masquer la Barre", "fa-eye", "fa-eye-slash"],
+      ["Montrer la Barre", "fa-eye-slash", "fa-eye"]
+    );
+  },
+
+  "open-bg-color-picker": () => {
+    injectColorPickerPopup();
+    const popup = document.getElementById("piv-bg-color-popup");
+    popup.classList.add("active");
+
+    popup.querySelector(".piv-color-close").onclick = () =>
+      popup.classList.remove("active");
+    popup.querySelectorAll("[data-color]").forEach((btn) =>
+      btn.onclick = () => applyPIBackgroundColor(btn.dataset.color)
+    );
+    popup.querySelector(".piv-color-input").oninput = (e) =>
+      applyPIBackgroundColor(e.target.value);
+  },
+
+  "set-fullscreen-mode": (item, header, mode) => {
+    toggleFullScreenMode(mode);
+    if (mode !== "custom-select") {
+      item.closest(".piv-dropdown-item-container")?.classList.remove("active");
+    }
+  },
+
+  "refresh-page": () => location.reload(),
+};
 
 /**
  * Attach click listeners for utility dropdown
  */
 function attachUtilityListeners() {
-  const utilityItems = document.querySelectorAll(".piv-utility-item");
   const header = document.getElementById("piv-custom-header");
 
-  utilityItems.forEach((item) => {
-    item.addEventListener("click", function (event) {
-      event.preventDefault();
+  document.querySelectorAll(".piv-utility-item").forEach((item) => {
+    item.addEventListener("click", (e) => {
+      e.preventDefault();
 
-      const action = item.getAttribute("data-action");
-      const mode = item.getAttribute("data-mode");
+      const action = item.dataset.action;
+      const mode = item.dataset.mode;
 
       console.log(`Utility action triggered: ${action} (Mode: ${mode})`);
 
-      // Cache icon + label once
-      const icon = item.querySelector("i");
-      const label = item.querySelector("span");
+      // Execute action handler
+      UTILITY_ACTIONS[action]?.(item, header, mode);
 
-      switch (action) {
-        case "hide-navbar": {
-          // Toggle minimized state
-          const isMinimized = header.classList.toggle("piv-minimized");
-
-          if (icon && label) {
-            if (isMinimized) {
-              label.textContent = "Montrer la Barre";
-              icon.classList.remove("fa-eye-slash");
-              icon.classList.add("fa-eye");
-            } else {
-              label.textContent = "Masquer la Barre";
-              icon.classList.remove("fa-eye");
-              icon.classList.add("fa-eye-slash");
-            }
-          }
-
-          break;
-        }
-
-        case "open-bg-color-picker": {
-          injectColorPickerPopup();
-
-          const popup = document.getElementById("piv-bg-color-popup");
-          popup.classList.add("active");
-
-          popup.querySelector(".piv-color-close").onclick = () => {
-            popup.classList.remove("active");
-          };
-
-          popup.querySelectorAll("[data-color]").forEach((btn) => {
-            btn.onclick = () => {
-              applyPIBackgroundColor(btn.dataset.color);
-            };
-          });
-
-          popup.querySelector(".piv-color-input").oninput = (e) => {
-            applyPIBackgroundColor(e.target.value);
-          };
-
-          break;
-        }
-
-        case "set-fullscreen-mode":
-          toggleFullScreenMode(mode);
-
-          // Close menu unless it's a placeholder action
-          if (mode !== "custom-select") {
-            item
-              .closest(".piv-dropdown-item-container")
-              ?.classList.remove("active");
-          }
-          return;
-
-        case "refresh-page":
-          window.location.reload();
-          return;
+      // Close menu for non-navigation actions
+      if (!["set-fullscreen-mode", "refresh-page"].includes(action)) {
+        item.closest(".piv-dropdown-item-container")?.classList.remove("active");
       }
-
-      // Close utility menu for standard actions
-      item.closest(".piv-dropdown-item-container")?.classList.remove("active");
     });
   });
 }

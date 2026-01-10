@@ -102,20 +102,15 @@
    * Main function that runs on page load and on hash change (SPA navigation).
    */
   async function initializeMenu() {
-    const currentHash = window.location.hash;
     const customHeader = document.getElementById("piv-custom-header");
 
-    // --- VIEW FILTERING ---
-    const isAllowed = ALLOWED_VIEW_HASHES.some((targetHash) =>
-      currentHash.startsWith(targetHash)
-    );
+    // Early exit if menu already exists
+    if (customHeader) return;
 
+    // View filtering (combined logic)
+    const isAllowed = ALLOWED_VIEW_HASHES.some((h) => location.hash.startsWith(h));
+    
     if (!isAllowed && !DEV_MODE) {
-      // Remove the menu if the user navigates away from an allowed page
-      if (customHeader) {
-        customHeader.remove();
-        location.reload();
-      }
       console.log("Menu script skipped: Current view is not a target view.");
       return;
     }
@@ -124,42 +119,35 @@
       console.log("%c🔧 DEV MODE: View filtering bypassed", "color: orange;");
     }
 
-    // Initialize Font awesome icons
+    // Initialize Font Awesome
     loadFontAwesome();
-    // --- END VIEW FILTERING ---
 
-    // If the menu already exists, only run the position observer and exit.
-    if (customHeader) {
-      return;
-    }
+    // Load and inject styles and SVG resources
+    GM_addStyle(GM_getResourceText("customCSS"));
+    Object.assign(window, {
+      logoSVG: GM_getResourceText("ocpLogo"),
+      secondaryLogoSVG: GM_getResourceText("secondaryLogo"),
+      sidebarLogoSVG: GM_getResourceText("avevaLogo"),
+    });
 
-    // 1. Inject Styles
-    const customCSS = GM_getResourceText("customCSS");
-    GM_addStyle(customCSS);
+    // Wait for container and inject HTML
+    const container = await waitForElement(TARGET_CONTAINER_SELECTOR);
+    container.insertAdjacentHTML("afterbegin", generateCustomMenuHTML());
 
-    // 2. Load SVG resources
-    window.logoSVG = GM_getResourceText("ocpLogo");
-    window.secondaryLogoSVG = GM_getResourceText("secondaryLogo");
-    window.sidebarLogoSVG = GM_getResourceText("avevaLogo");
+    // Batch all UI injections
+    await Promise.all([
+      injectSidebarLogo(),
+      injectLiveDate(),
+      injectSecondaryLogo(),
+    ]);
 
-    // 3. Wait for the Target Container to exist
-    const targetContainer = await waitForElement(TARGET_CONTAINER_SELECTOR);
-
-    // 4. Inject HTML
-    targetContainer.insertAdjacentHTML("afterbegin", generateCustomMenuHTML());
-
-    // 5. Inject additional UI elements
-    injectSidebarLogo();
-    injectLiveDate();
-    injectSecondaryLogo();
-
-    // 6. Attach Event Listeners
+    // Attach all event listeners
     attachDropdownHoverListeners();
     attachNavigationListeners();
     attachUtilityListeners();
 
     console.log(
-      "%c✅ Dynamic & Responsive PI Vision Navbar Initialized!",
+      "%c✅ PI Vision Navbar Initialized!",
       "color: green; font-size: 14px; font-weight: bold;"
     );
   }

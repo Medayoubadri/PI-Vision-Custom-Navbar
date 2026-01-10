@@ -349,54 +349,48 @@ const utilityMenuItems = [
 ];
 
 /**
+ * Helper to render icon + text for menu items
+ * @param {Object} item - Menu item object
+ * @param {boolean} isSubmenu - Whether this is a submenu title
+ * @returns {string}
+ */
+const renderMenuItem = (item, isSubmenu = false) => `
+  <i class="fa-solid ${item.icon} piv-icon"></i>
+  <span>${item.text}</span>
+  ${isSubmenu ? '<i class="fa-solid fa-chevron-right piv-arrow-right"></i>' : ''}
+`;
+
+/**
  * Recursively renders menu items (items, submenus, external links)
  * @param {Array} items
  * @returns {string}
  */
 function renderMenuItems(items) {
-  return items
-    .map((item) => {
-      // EXTERNAL LINK
-      if (item.url) {
-        return `
-          <a href="${item.url}"
-             target="_blank"
-             rel="noopener noreferrer"
-             class="piv-menu-item">
-            <i class="fa-solid ${item.icon} piv-icon"></i>
-            <span>${item.text}</span>
-          </a>
-        `;
-      }
+  return items.map((item) => {
+    // EXTERNAL LINK
+    if (item.url) {
+      return `<a href="${item.url}" target="_blank" rel="noopener noreferrer" class="piv-menu-item">
+        ${renderMenuItem(item)}
+      </a>`;
+    }
 
-      // NESTED SUBMENU
-      if (item.children && item.children.length) {
-        return `
-          <div class="piv-menu-wrapper">
-            <div class="piv-menu-item piv-submenu-title">
-              <i class="fa-solid ${item.icon} piv-icon"></i>
-              <span>${item.text}</span>
-              <i class="fa-solid fa-chevron-right piv-arrow-right"></i>
-            </div>
+    // NESTED SUBMENU
+    if (item.children?.length) {
+      return `<div class="piv-menu-wrapper">
+        <div class="piv-menu-item piv-submenu-title">
+          ${renderMenuItem(item, true)}
+        </div>
+        <div class="piv-nested-submenu">
+          ${renderMenuItems(item.children)}
+        </div>
+      </div>`;
+    }
 
-            <div class="piv-nested-submenu">
-              ${renderMenuItems(item.children)}
-            </div>
-          </div>
-        `;
-      }
-
-      // INTERNAL PI VISION LINK
-      return `
-        <a href="${item.hash}"
-           data-hash="${item.hash}"
-           class="piv-menu-item">
-          <i class="fa-solid ${item.icon} piv-icon"></i>
-          <span>${item.text}</span>
-        </a>
-      `;
-    })
-    .join("");
+    // INTERNAL PI VISION LINK
+    return `<a href="${item.hash}" data-hash="${item.hash}" class="piv-menu-item">
+      ${renderMenuItem(item)}
+    </a>`;
+  }).join("");
 }
 
 /**
@@ -407,21 +401,16 @@ function renderMenuItems(items) {
  */
 function generateDropdownHTML(menu, index) {
   const sanitizedId = menu.title.replace(/[^a-zA-Z0-9]/g, "_");
+  const divider = index < menuData.length - 1 ? '<div class="piv-menu-divider"></div>' : '';
 
-  return `
-    <div class="piv-dropdown-item-container" data-id="${sanitizedId}">
-      <button class="piv-dropbtn">
-        ${menu.title}
-        <i class="fa-solid fa-chevron-down piv-arrow"></i>
-      </button>
-
-      <div class="piv-dropdown-content">
-        ${renderMenuItems(menu.items)}
-      </div>
+  return `<div class="piv-dropdown-item-container" data-id="${sanitizedId}">
+    <button class="piv-dropbtn">
+      ${menu.title} <i class="fa-solid fa-chevron-down piv-arrow"></i>
+    </button>
+    <div class="piv-dropdown-content">
+      ${renderMenuItems(menu.items)}
     </div>
-
-    ${index < menuData.length - 1 ? '<div class="piv-menu-divider"></div>' : ""}
-  `;
+  </div>${divider}`;
 }
 
 /**
