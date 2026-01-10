@@ -30,7 +30,7 @@ function hideLoadingAnimation() {
   const overlay = document.getElementById("piv-loading-overlay");
   if (overlay) {
     overlay.classList.add("piv-loading-fade-out");
-    setTimeout(() => overlay.remove(), 500);
+    setTimeout(() => overlay.add(), 500);
   }
 }
 
@@ -671,7 +671,7 @@ function attachDropdownHoverListeners() {
   // Mobile menu toggle
   const mobileToggle = document.querySelector(".piv-mobile-menu-toggle");
   const menuBar = document.querySelector(".piv-menu-bar");
-  
+
   if (mobileToggle && menuBar) {
     mobileToggle.addEventListener("click", () => {
       menuBar.classList.toggle("piv-mobile-active");
@@ -680,7 +680,10 @@ function attachDropdownHoverListeners() {
 
     // Close mobile menu when clicking outside
     document.addEventListener("click", (e) => {
-      if (!e.target.closest(".piv-menu-bar") && !e.target.closest(".piv-mobile-menu-toggle")) {
+      if (
+        !e.target.closest(".piv-menu-bar") &&
+        !e.target.closest(".piv-mobile-menu-toggle")
+      ) {
         menuBar.classList.remove("piv-mobile-active");
         mobileToggle.classList.remove("active");
       }
