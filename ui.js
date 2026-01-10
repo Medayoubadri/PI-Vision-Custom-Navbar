@@ -216,6 +216,11 @@ function injectColorPickerPopup() {
           <input type="text" id="piv-hex-input" class="piv-hex-input" placeholder="#000000" maxlength="7" />
         </div>
 
+        <div class="piv-color-palette-group">
+          <label for="piv-color-palette">Sélecteur de Palette</label>
+          <input type="color" id="piv-color-palette" class="piv-color-palette" value="#000000" />
+        </div>
+
         <div class="piv-color-sliders">
           <div class="piv-slider-group">
             <label>Rouge <span id="piv-r-value">0</span></label>
@@ -255,6 +260,7 @@ function initializeCustomColorPicker() {
   const bSlider = document.getElementById("piv-b-slider");
   const hexInput = document.getElementById("piv-hex-input");
   const swatch = document.getElementById("piv-color-swatch");
+  const colorPalette = document.getElementById("piv-color-palette");
   const applyBtn = document.querySelector(".piv-picker-apply");
   const cancelBtn = document.querySelector(".piv-picker-cancel");
 
@@ -274,6 +280,7 @@ function initializeCustomColorPicker() {
     const hex = rgbToHex(currentColor.r, currentColor.g, currentColor.b);
     hexInput.value = hex;
     swatch.style.backgroundColor = hex;
+    colorPalette.value = hex; // Sync with HTML5 color picker
 
     document.getElementById("piv-r-value").textContent = currentColor.r;
     document.getElementById("piv-g-value").textContent = currentColor.g;
@@ -304,10 +311,30 @@ function initializeCustomColorPicker() {
   bSlider?.addEventListener("input", updateColorFromSliders);
   hexInput?.addEventListener("change", updateColorFromHex);
 
+  // Update color from HTML5 color palette input
+  colorPalette?.addEventListener("input", () => {
+    const hex = colorPalette.value;
+    const rgb = hexToRgb(hex);
+    if (rgb) {
+      currentColor = rgb;
+      rSlider.value = rgb.r;
+      gSlider.value = rgb.g;
+      bSlider.value = rgb.b;
+      hexInput.value = hex;
+      swatch.style.backgroundColor = hex;
+
+      document.getElementById("piv-r-value").textContent = rgb.r;
+      document.getElementById("piv-g-value").textContent = rgb.g;
+      document.getElementById("piv-b-value").textContent = rgb.b;
+    }
+  });
+
   // Apply custom color
   applyBtn?.addEventListener("click", () => {
     const hex = rgbToHex(currentColor.r, currentColor.g, currentColor.b);
     applyPIBackgroundColor(hex);
+    PIVStorage.saveTheme(hex, "custom");
+    updateThemeSelection(null, true); // Mark custom as selected
     toggle.checked = false;
     panel?.classList.remove("active");
   });
@@ -330,7 +357,7 @@ function initializeCustomColorPicker() {
  * @returns {string} - Hex color
  */
 function rgbToHex(r, g, b) {
-  return "#" + [r, g, b].map(x => x.toString(16).padStart(2, "0")).join("");
+  return "#" + [r, g, b].map((x) => x.toString(16).padStart(2, "0")).join("");
 }
 
 /**
@@ -340,11 +367,13 @@ function rgbToHex(r, g, b) {
  */
 function hexToRgb(hex) {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result ? {
-    r: parseInt(result[1], 16),
-    g: parseInt(result[2], 16),
-    b: parseInt(result[3], 16)
-  } : null;
+  return result
+    ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16),
+      }
+    : null;
 }
 
 /**
@@ -484,6 +513,49 @@ function attachNavigationListeners() {
 }
 
 /**
+ * Update visual indicators for selected theme
+ * @param {string|null} selectedColor - The color of the selected preset theme (or null for custom)
+ * @param {boolean} isCustom - Whether custom theme is selected
+ */
+function updateThemeSelection(selectedColor = null, isCustom = false) {
+  // Remove all existing indicators
+  document.querySelectorAll(".piv-theme-card").forEach((card) => {
+    const indicator = card.querySelector(".piv-theme-selected");
+    if (indicator) indicator.remove();
+    card.classList.remove("selected");
+  });
+
+  const toggle = document.getElementById("piv-custom-toggle");
+  const toggleLabel = toggle?.parentElement;
+
+  // Remove custom indicator
+  const customIndicator = toggleLabel?.querySelector(".piv-custom-selected");
+  if (customIndicator) customIndicator.remove();
+
+  if (isCustom) {
+    // Mark custom as selected
+    if (toggleLabel && !toggleLabel.querySelector(".piv-custom-selected")) {
+      toggleLabel.insertAdjacentHTML(
+        "beforeend",
+        '<i class="fa-solid fa-circle-check piv-custom-selected"></i>'
+      );
+    }
+  } else if (selectedColor) {
+    // Mark preset theme as selected
+    const selectedCard = document.querySelector(
+      `.piv-theme-card[data-color="${selectedColor}"]`
+    );
+    if (selectedCard) {
+      selectedCard.classList.add("selected");
+      selectedCard.insertAdjacentHTML(
+        "beforeend",
+        '<i class="fa-solid fa-circle-check piv-theme-selected"></i>'
+      );
+    }
+  }
+}
+
+/**
  * Utility action handlers
  */
 const UTILITY_ACTIONS = {
@@ -502,6 +574,15 @@ const UTILITY_ACTIONS = {
     const popup = document.getElementById("piv-bg-color-popup");
     popup.classList.add("active");
 
+    // Restore visual indicators for saved theme
+    const savedTheme = PIVStorage.getTheme();
+    if (savedTheme) {
+      updateThemeSelection(
+        savedTheme.type === "preset" ? savedTheme.color : null,
+        savedTheme.type === "custom"
+      );
+    }
+
     popup.querySelector(".piv-color-close").onclick = () => {
       popup.classList.remove("active");
       // Reset custom picker panel
@@ -511,9 +592,16 @@ const UTILITY_ACTIONS = {
       if (panel) panel.classList.remove("active");
     };
 
-    popup.querySelectorAll(".piv-theme-card").forEach((card) =>
-      card.onclick = () => applyPIBackgroundColor(card.dataset.color)
-    );
+    popup
+      .querySelectorAll(".piv-theme-card")
+      .forEach((card) => {
+        card.onclick = () => {
+          const color = card.dataset.color;
+          applyPIBackgroundColor(color);
+          PIVStorage.saveTheme(color, "preset");
+          updateThemeSelection(color, false);
+        };
+      });
   },
 
   "set-fullscreen-mode": (item, header, mode) => {

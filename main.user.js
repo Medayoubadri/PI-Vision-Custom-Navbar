@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          PI Vision Custom Dropdown Menu
 // @namespace     https://github.com/Medayoubadri/PI-Vision-Custom-Navbar
-// @version       0.9.2-DEV-1.6
+// @version       0.9.2-DEV-1.7
 // @description   A custom navbar menu for PI Vision
 // @author        MEDAYOUBADRI
 // @updateURL     https://raw.githubusercontent.com/Medayoubadri/PI-Vision-Custom-Navbar/main/main.user.js
@@ -11,6 +11,7 @@
 // @match         http://127.0.0.1:*/*
 // @match         file:///*
 // @require       https://raw.githubusercontent.com/Medayoubadri/PI-Vision-Custom-Navbar/main/menu.js
+// @require       https://raw.githubusercontent.com/Medayoubadri/PI-Vision-Custom-Navbar/main/storage.js
 // @require       https://raw.githubusercontent.com/Medayoubadri/PI-Vision-Custom-Navbar/main/ui.js
 // @resource      customCSS https://raw.githubusercontent.com/Medayoubadri/PI-Vision-Custom-Navbar/main/styles.css
 // @resource      ocpLogo https://raw.githubusercontent.com/Medayoubadri/PI-Vision-Custom-Navbar/main/ocp-logo.svg
@@ -147,6 +148,16 @@
     attachDropdownHoverListeners();
     attachNavigationListeners();
     attachUtilityListeners();
+
+    // Restore saved theme
+    const savedTheme = PIVStorage.getTheme();
+    if (savedTheme) {
+      applyPIBackgroundColor(savedTheme.color);
+      if (DEV_MODE)
+        console.log(
+          `🎨 Restored ${savedTheme.type} theme: ${savedTheme.color}`
+        );
+    }
 
     console.log(
       "%c✅ PI Vision Navbar Initialized!",
