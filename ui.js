@@ -146,14 +146,20 @@ function injectColorPickerPopup() {
           <span>Nuit Profonde</span>
         </div>
 
-        <div class="piv-theme-card" data-color="#1e3a8a">
+        <div class="piv-theme-card" data-color="linear-gradient(135deg, #667eea 0%, #764ba2 100%)">
           <svg viewBox="0 0 120 70">
-            <rect width="120" height="70" rx="6" fill="#1e3a8a"/>
-            <rect x="8" y="10" width="40" height="6" rx="2" fill="#93c5fd"/>
-            <rect x="8" y="22" width="60" height="6" rx="2" fill="#60a5fa"/>
-            <rect x="8" y="34" width="80" height="6" rx="2" fill="#3b82f6"/>
+            <defs>
+              <linearGradient id="grad-ocean" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+              </linearGradient>
+            </defs>
+            <rect width="120" height="70" rx="6" fill="url(#grad-ocean)"/>
+            <rect x="8" y="10" width="40" height="6" rx="2" fill="#e0e7ff" opacity="0.9"/>
+            <rect x="8" y="22" width="60" height="6" rx="2" fill="#c7d2fe" opacity="0.8"/>
+            <rect x="8" y="34" width="80" height="6" rx="2" fill="#a5b4fc" opacity="0.7"/>
           </svg>
-          <span>Océan Bleu</span>
+          <span>Crépuscule Violet</span>
         </div>
 
         <div class="piv-theme-card" data-color="#065f46">
@@ -166,14 +172,20 @@ function injectColorPickerPopup() {
           <span>Forêt Émeraude</span>
         </div>
 
-        <div class="piv-theme-card" data-color="#c2410c">
+        <div class="piv-theme-card" data-color="linear-gradient(135deg, #f093fb 0%, #f5576c 100%)">
           <svg viewBox="0 0 120 70">
-            <rect width="120" height="70" rx="6" fill="#c2410c"/>
-            <rect x="8" y="10" width="40" height="6" rx="2" fill="#fed7aa"/>
-            <rect x="8" y="22" width="60" height="6" rx="2" fill="#fdba74"/>
-            <rect x="8" y="34" width="80" height="6" rx="2" fill="#fb923c"/>
+            <defs>
+              <linearGradient id="grad-sunset" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#f093fb;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#f5576c;stop-opacity:1" />
+              </linearGradient>
+            </defs>
+            <rect width="120" height="70" rx="6" fill="url(#grad-sunset)"/>
+            <rect x="8" y="10" width="40" height="6" rx="2" fill="#fef3c7" opacity="0.9"/>
+            <rect x="8" y="22" width="60" height="6" rx="2" fill="#fde68a" opacity="0.8"/>
+            <rect x="8" y="34" width="80" height="6" rx="2" fill="#fcd34d" opacity="0.7"/>
           </svg>
-          <span>Coucher de Soleil</span>
+          <span>Aurore Rose</span>
         </div>
 
         <div class="piv-theme-card" data-color="#581c87">
@@ -186,14 +198,20 @@ function injectColorPickerPopup() {
           <span>Nuit Violette</span>
         </div>
 
-        <div class="piv-theme-card" data-color="#374151">
+        <div class="piv-theme-card" data-color="linear-gradient(135deg, #2c3e50 0%, #000000 100%)">
           <svg viewBox="0 0 120 70">
-            <rect width="120" height="70" rx="6" fill="#374151"/>
-            <rect x="8" y="10" width="40" height="6" rx="2" fill="#d1d5db"/>
-            <rect x="8" y="22" width="60" height="6" rx="2" fill="#9ca3af"/>
-            <rect x="8" y="34" width="80" height="6" rx="2" fill="#6b7280"/>
+            <defs>
+              <linearGradient id="grad-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#2c3e50;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#000000;stop-opacity:1" />
+              </linearGradient>
+            </defs>
+            <rect width="120" height="70" rx="6" fill="url(#grad-dark)"/>
+            <rect x="8" y="10" width="40" height="6" rx="2" fill="#94a3b8" opacity="0.9"/>
+            <rect x="8" y="22" width="60" height="6" rx="2" fill="#64748b" opacity="0.8"/>
+            <rect x="8" y="34" width="80" height="6" rx="2" fill="#475569" opacity="0.7"/>
           </svg>
-          <span>Acier Gris</span>
+          <span>Nuit Étoilée</span>
         </div>
       </div>
 
@@ -503,7 +521,7 @@ function hexToRgb(hex) {
 
 /**
  * Apply background color to PI Vision interface
- * @param {string} color - Hexadecimal color code
+ * @param {string} color - Hexadecimal color code or CSS gradient
  */
 function applyPIBackgroundColor(color) {
   const STYLE_ID = "piv-bg-color-style";
@@ -516,9 +534,18 @@ function applyPIBackgroundColor(color) {
     document.head.appendChild(styleEl);
   }
 
-  // Adjust text colors based on background brightness
-  const dark = isColorDark(color);
+  // Detect if it's a gradient or solid color
+  const isGradient = color.startsWith("linear-gradient");
+  
+  // For gradients, assume dark background (most gradients are dark)
+  // For solid colors, calculate brightness
+  const dark = isGradient ? true : isColorDark(color);
   const textColor = dark ? "#ffffffcc" : "#000000cc";
+
+  // Use background-image for gradients, background for solid colors
+  const bgProperty = isGradient 
+    ? `background-image: ${color} !important; background-color: #0f172a !important;`
+    : `background: ${color} !important;`;
 
   styleEl.textContent = `
     /* PIV Custom Background Override */
@@ -535,7 +562,7 @@ function applyPIBackgroundColor(color) {
     .c-splitter-disabled,
     .t-pane-header-color,
     .tool-tabs {
-      background: ${color} !important;
+      ${bgProperty}
       color: ${textColor} !important;
     }
   `;
@@ -723,6 +750,15 @@ const UTILITY_ACTIONS = {
         applyPIBackgroundColor(color);
         PIVStorage.saveTheme(color, "preset");
         updateThemeSelection(color, false);
+        
+        // Close popup after selection
+        setTimeout(() => {
+          popup.classList.remove("active");
+          const toggle = document.getElementById("piv-custom-toggle");
+          const panel = document.getElementById("piv-custom-picker-panel");
+          if (toggle) toggle.checked = false;
+          if (panel) panel.classList.remove("active");
+        }, 300);
       };
     });
   },
