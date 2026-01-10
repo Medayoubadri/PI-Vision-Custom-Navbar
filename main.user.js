@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          PI Vision Custom Dropdown Menu
 // @namespace     https://github.com/Medayoubadri/PI-Vision-Custom-Navbar
-// @version       0.9.2
+// @version       0.9.2-DEV
 // @description   A custom navbar menu for PI Vision
 // @author        MEDAYOUBADRI
 // @updateURL     https://raw.githubusercontent.com/Medayoubadri/PI-Vision-Custom-Navbar/main/main.user.js
@@ -29,12 +29,16 @@
   // =================================================================
 
   // Developer Mode Detection (auto-enabled for localhost/file)
-  const DEV_MODE = window.location.hostname === 'localhost' 
-                   || window.location.hostname === '127.0.0.1'
-                   || window.location.protocol === 'file:';
+  const DEV_MODE =
+    window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1" ||
+    window.location.protocol === "file:";
 
   if (DEV_MODE) {
-    console.log('%c🔧 Developer Mode Enabled', 'color: orange; font-weight: bold;');
+    console.log(
+      "%c🔧 Developer Mode Enabled",
+      "color: orange; font-weight: bold;"
+    );
   }
 
   /* Target class/container */
@@ -117,7 +121,7 @@
     }
 
     if (DEV_MODE && !isAllowed) {
-      console.log('%c🔧 DEV MODE: View filtering bypassed', 'color: orange;');
+      console.log("%c🔧 DEV MODE: View filtering bypassed", "color: orange;");
     }
 
     // Initialize Font awesome icons
