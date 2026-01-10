@@ -361,6 +361,7 @@
 
 .piv-theme-popup {
   position: fixed;
+  visibility: hidden;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -48%) scale(0.95);
@@ -382,6 +383,7 @@
 .piv-theme-popup.active {
   opacity: 1;
   transform: translate(-50%, -50%) scale(1);
+  visibility: visible;
   user-select: auto;
 }
 
