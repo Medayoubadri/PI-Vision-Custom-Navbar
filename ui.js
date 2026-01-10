@@ -15,7 +15,7 @@ function showLoadingAnimation() {
     <div id="piv-loading-overlay" class="piv-loading-overlay">
       <div class="piv-loading-content">
         <div class="piv-loading-spinner"></div>
-        <div class="piv-loading-text">Chargement de la barre de navigation...</div>
+        <div class="piv-loading-text">Initialisation...</div>
       </div>
     </div>
   `;

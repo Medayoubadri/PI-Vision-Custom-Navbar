@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          PI Vision Custom Dropdown Menu
 // @namespace     https://github.com/Medayoubadri/PI-Vision-Custom-Navbar
-// @version       0.9.2-DEV-2.5
+// @version       0.9.2-DEV-2.6
 // @description   A custom navbar menu for PI Vision
 // @author        MEDAYOUBADRI
 // @updateURL     https://raw.githubusercontent.com/Medayoubadri/PI-Vision-Custom-Navbar/main/main.user.js
@@ -167,8 +167,10 @@
       "color: green; font-size: 14px; font-weight: bold;"
     );
 
-    // Hide loading animation
-    hideLoadingAnimation();
+    // Hide loading animation with small delay to ensure smooth transition
+    setTimeout(() => {
+      hideLoadingAnimation();
+    }, 300);
   }
 
   // =================================================================

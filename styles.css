@@ -1101,30 +1101,51 @@
 }
 
 .piv-mobile-menu-toggle.active span:nth-child(1) {
-  transform: rotate(45deg) translateY(15px) translateX(6px);
+  transform: rotate(45deg) translate(6px, 6px);
 }
 
 .piv-mobile-menu-toggle.active span:nth-child(2) {
   opacity: 0;
+  transform: translateX(-20px);
 }
 
 .piv-mobile-menu-toggle.active span:nth-child(3) {
-  transform: rotate(-45deg) translateY(-10px);
+  transform: rotate(-45deg) translate(6px, -6px);
 }
 
 /* ============================================
    RESPONSIVE DESIGN
    ============================================ */
 
-/* Laptop */
-@media (max-width: 1367px) {
+/* Large Laptop (1440px - standard desktop) */
+@media (max-width: 1440px) {
+  .piv-ocp-logo svg {
+    height: 38px;
+  }
+
+  .piv-dropbtn {
+    padding: 11px;
+    font-size: 13.5px;
+  }
+
+  .piv-live-date {
+    font-size: 15.5px;
+  }
+
+  .piv-secondary-logo svg {
+    height: 23px;
+  }
+}
+
+/* Laptop (1366px - most common laptop resolution) */
+@media (max-width: 1366px) {
   .piv-ocp-logo svg {
     height: 36px;
   }
 
   .piv-dropbtn {
     padding: 10px;
-    font-size: 12px;
+    font-size: 13px;
   }
 
   .piv-live-date {
@@ -1140,10 +1161,34 @@
   }
 }
 
-/* Tablet (Portrait) */
+/* Small Laptop (1280px) */
+@media (max-width: 1280px) {
+  .piv-ocp-logo svg {
+    height: 34px;
+  }
+
+  .piv-dropbtn {
+    padding: 9px;
+    font-size: 12.5px;
+  }
+
+  .piv-live-date {
+    font-size: 14.5px;
+  }
+
+  .piv-secondary-logo svg {
+    height: 21px;
+  }
+
+  .piv-dropdown-content {
+    max-width: 270px;
+  }
+}
+
+/* Tablet (Portrait - iPad, etc.) */
 @media (max-width: 1024px) {
   .piv-custom-header-bar {
-    padding: 8px 12px;
+    padding: 9px 12px;
   }
 
   .piv-logo-container {
@@ -1151,12 +1196,12 @@
   }
 
   .piv-ocp-logo svg {
-    height: 26px;
+    height: 32px;
   }
 
   .piv-dropbtn {
-    padding: 8px;
-    font-size: 10px;
+    padding: 9px;
+    font-size: 12px;
   }
 
   .piv-live-date {
@@ -1168,7 +1213,11 @@
   }
 
   .piv-dropdown-content {
-    max-width: 250px;
+    max-width: 260px;
+  }
+
+  .piv-menu-divider {
+    margin: 8px;
   }
 }
 
@@ -1290,10 +1339,14 @@
   }
 }
 
-/* Small Mobile */
+/* Small Mobile (iPhone SE, etc.) */
 @media (max-width: 480px) {
+  .piv-custom-header-bar {
+    padding: 8px;
+  }
+
   .piv-ocp-logo svg {
-    height: 28px;
+    height: 26px;
   }
 
   .piv-dropbtn {
@@ -1306,6 +1359,7 @@
     max-width: 100%;
     border-radius: 0;
     height: 100vh;
+    padding: 16px;
   }
 
   .piv-theme-grid {
@@ -1315,14 +1369,19 @@
 
   .piv-custom-picker-panel {
     border-radius: 0;
+    padding: 16px;
   }
 
   .piv-sl-area {
-    height: 120px;
+    height: 100px;
   }
 
   .piv-sidebar-logo {
     display: none;
+  }
+
+  .piv-color-popup-header {
+    font-size: 16px;
   }
 }
 
