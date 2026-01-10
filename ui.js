@@ -217,8 +217,10 @@ function injectColorPickerPopup() {
         </div>
 
         <div class="piv-color-palette-group">
-          <label for="piv-color-palette">Sélecteur de Palette</label>
-          <input type="color" id="piv-color-palette" class="piv-color-palette" value="#000000" />
+          <label>Palette de Couleurs</label>
+          <div class="piv-color-palette-grid" id="piv-color-palette-grid">
+            <!-- Color swatches will be generated here -->
+          </div>
         </div>
 
         <div class="piv-color-sliders">
@@ -260,11 +262,15 @@ function initializeCustomColorPicker() {
   const bSlider = document.getElementById("piv-b-slider");
   const hexInput = document.getElementById("piv-hex-input");
   const swatch = document.getElementById("piv-color-swatch");
-  const colorPalette = document.getElementById("piv-color-palette");
   const applyBtn = document.querySelector(".piv-picker-apply");
   const cancelBtn = document.querySelector(".piv-picker-cancel");
 
-  let currentColor = { r: 15, g: 23, b: 42 }; // Default color
+  // Load saved custom color or use default
+  const savedTheme = PIVStorage.getTheme();
+  const defaultColor = savedTheme?.type === "custom" 
+    ? hexToRgb(savedTheme.color) 
+    : { r: 15, g: 23, b: 42 };
+  let currentColor = defaultColor;
 
   // Toggle custom picker panel
   toggle?.addEventListener("change", (e) => {
@@ -280,7 +286,6 @@ function initializeCustomColorPicker() {
     const hex = rgbToHex(currentColor.r, currentColor.g, currentColor.b);
     hexInput.value = hex;
     swatch.style.backgroundColor = hex;
-    colorPalette.value = hex; // Sync with HTML5 color picker
 
     document.getElementById("piv-r-value").textContent = currentColor.r;
     document.getElementById("piv-g-value").textContent = currentColor.g;
@@ -311,23 +316,8 @@ function initializeCustomColorPicker() {
   bSlider?.addEventListener("input", updateColorFromSliders);
   hexInput?.addEventListener("change", updateColorFromHex);
 
-  // Update color from HTML5 color palette input
-  colorPalette?.addEventListener("input", () => {
-    const hex = colorPalette.value;
-    const rgb = hexToRgb(hex);
-    if (rgb) {
-      currentColor = rgb;
-      rSlider.value = rgb.r;
-      gSlider.value = rgb.g;
-      bSlider.value = rgb.b;
-      hexInput.value = hex;
-      swatch.style.backgroundColor = hex;
-
-      document.getElementById("piv-r-value").textContent = rgb.r;
-      document.getElementById("piv-g-value").textContent = rgb.g;
-      document.getElementById("piv-b-value").textContent = rgb.b;
-    }
-  });
+  // Initialize custom color palette grid
+  initializeColorPaletteGrid(rSlider, gSlider, bSlider, hexInput, swatch);
 
   // Apply custom color
   applyBtn?.addEventListener("click", () => {
@@ -345,8 +335,72 @@ function initializeCustomColorPicker() {
     panel?.classList.remove("active");
   });
 
-  // Initialize with default color
+  // Initialize with saved or default color
+  rSlider.value = currentColor.r;
+  gSlider.value = currentColor.g;
+  bSlider.value = currentColor.b;
   updateColorFromSliders();
+}
+
+/**
+ * Initialize custom color palette grid
+ */
+function initializeColorPaletteGrid(rSlider, gSlider, bSlider, hexInput, swatch) {
+  const grid = document.getElementById("piv-color-palette-grid");
+  if (!grid) return;
+
+  // Curated color palette with vibrant and useful colors
+  const colors = [
+    // Reds
+    "#ef4444", "#dc2626", "#b91c1c", "#7f1d1d",
+    // Oranges
+    "#f97316", "#ea580c", "#c2410c", "#9a3412",
+    // Yellows
+    "#fbbf24", "#f59e0b", "#d97706", "#b45309",
+    // Greens
+    "#22c55e", "#16a34a", "#15803d", "#14532d",
+    // Teals
+    "#14b8a6", "#0d9488", "#0f766e", "#134e4a",
+    // Cyans
+    "#06b6d4", "#0891b2", "#0e7490", "#155e75",
+    // Blues
+    "#3b82f6", "#2563eb", "#1d4ed8", "#1e3a8a",
+    // Indigos
+    "#6366f1", "#4f46e5", "#4338ca", "#3730a3",
+    // Purples
+    "#a855f7", "#9333ea", "#7e22ce", "#6b21a8",
+    // Pinks
+    "#ec4899", "#db2777", "#be185d", "#9f1239",
+    // Grays
+    "#6b7280", "#4b5563", "#374151", "#1f2937",
+    // Dark
+    "#18181b", "#0f172a", "#020617", "#000000",
+  ];
+
+  // Generate color swatches
+  colors.forEach((color) => {
+    const swatch = document.createElement("div");
+    swatch.className = "piv-palette-swatch";
+    swatch.style.backgroundColor = color;
+    swatch.title = color;
+    
+    swatch.addEventListener("click", () => {
+      const rgb = hexToRgb(color);
+      if (rgb) {
+        rSlider.value = rgb.r;
+        gSlider.value = rgb.g;
+        bSlider.value = rgb.b;
+        hexInput.value = color;
+        document.getElementById("piv-color-swatch").style.backgroundColor = color;
+        
+        document.getElementById("piv-r-value").textContent = rgb.r;
+        document.getElementById("piv-g-value").textContent = rgb.g;
+        document.getElementById("piv-b-value").textContent = rgb.b;
+      }
+    });
+    
+    grid.appendChild(swatch);
+  });
 }
 
 /**
@@ -592,16 +646,14 @@ const UTILITY_ACTIONS = {
       if (panel) panel.classList.remove("active");
     };
 
-    popup
-      .querySelectorAll(".piv-theme-card")
-      .forEach((card) => {
-        card.onclick = () => {
-          const color = card.dataset.color;
-          applyPIBackgroundColor(color);
-          PIVStorage.saveTheme(color, "preset");
-          updateThemeSelection(color, false);
-        };
-      });
+    popup.querySelectorAll(".piv-theme-card").forEach((card) => {
+      card.onclick = () => {
+        const color = card.dataset.color;
+        applyPIBackgroundColor(color);
+        PIVStorage.saveTheme(color, "preset");
+        updateThemeSelection(color, false);
+      };
+    });
   },
 
   "set-fullscreen-mode": (item, header, mode) => {
