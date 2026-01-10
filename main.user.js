@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          PI Vision Custom Dropdown Menu
 // @namespace     https://github.com/Medayoubadri/PI-Vision-Custom-Navbar
-// @version       0.9.2-DEV-1.1
+// @version       0.9.2-DEV-1.2
 // @description   A custom navbar menu for PI Vision
 // @author        MEDAYOUBADRI
 // @updateURL     https://raw.githubusercontent.com/Medayoubadri/PI-Vision-Custom-Navbar/main/main.user.js
@@ -108,8 +108,10 @@
     if (customHeader) return;
 
     // View filtering (combined logic)
-    const isAllowed = ALLOWED_VIEW_HASHES.some((h) => location.hash.startsWith(h));
-    
+    const isAllowed = ALLOWED_VIEW_HASHES.some((h) =>
+      location.hash.startsWith(h)
+    );
+
     if (!isAllowed && !DEV_MODE) {
       console.log("Menu script skipped: Current view is not a target view.");
       return;
