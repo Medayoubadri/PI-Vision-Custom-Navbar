@@ -58,7 +58,7 @@ function updateIconAndLabel(item, condition, stateOff, stateOn) {
  * @param {number} timeout - Maximum wait time in milliseconds (default: 10000)
  * @returns {Promise<Element>}
  */
-function waitForElement(selector, timeout = 1000) {
+function waitForElement(selector, timeout = 10000) {
   return new Promise((resolve, reject) => {
     // Check immediately
     const element = document.querySelector(selector);
