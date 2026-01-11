@@ -692,21 +692,24 @@ function attachDropdownHoverListeners() {
       wrapper.classList.remove("piv-nested-active");
     });
 
-    // Detect overflow and adjust positioning on wrapper hover
+    // Detect overflow only once on first hover
     wrapper.addEventListener("mouseenter", () => {
-      // Small delay to ensure submenu is rendered
+      // Skip if already checked
+      if (nestedSubmenu.dataset.positionChecked) return;
+      
+      nestedSubmenu.dataset.positionChecked = "true";
+      
+      // Check wrapper's position in viewport
       setTimeout(() => {
-        const rect = nestedSubmenu.getBoundingClientRect();
+        const wrapperRect = wrapper.getBoundingClientRect();
         const viewportHeight = window.innerHeight;
-
-        // Check if submenu overflows bottom of viewport
-        if (rect.bottom > viewportHeight) {
+        
+        // If wrapper is in bottom half of screen, position submenu from bottom
+        if (wrapperRect.top > viewportHeight / 2) {
           nestedSubmenu.classList.add("piv-position-bottom");
-        } else {
-          nestedSubmenu.classList.remove("piv-position-bottom");
         }
-      }, 50);
-    });
+      }, 100);
+    }, { once: false });
   });
 
   // Mobile menu toggle
