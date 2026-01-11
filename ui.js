@@ -30,7 +30,7 @@ function hideLoadingAnimation() {
   const overlay = document.getElementById("piv-loading-overlay");
   if (overlay) {
     overlay.classList.add("piv-loading-fade-out");
-    setTimeout(() => overlay.add(), 500);
+    setTimeout(() => overlay.remove(), 500);
   }
 }
 
@@ -617,7 +617,7 @@ async function injectSecondaryLogo() {
  * Inject Sidebar Logo
  */
 async function injectSidebarLogo() {
-  const sidebar = await waitForElement("#sidebar-pane");
+  const sidebar = await waitForElement("sidebar-pane");
 
   if (sidebar.querySelector(".piv-sidebar-logo")) return;
 
