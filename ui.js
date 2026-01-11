@@ -677,6 +677,38 @@ function attachDropdownHoverListeners() {
     });
   });
 
+  // Nested submenu hover state and overflow detection
+  const menuWrappers = document.querySelectorAll(".piv-menu-wrapper");
+  menuWrappers.forEach((wrapper) => {
+    const nestedSubmenu = wrapper.querySelector(".piv-nested-submenu");
+    if (!nestedSubmenu) return;
+
+    // Keep wrapper active when hovering over nested submenu
+    nestedSubmenu.addEventListener("mouseenter", () => {
+      wrapper.classList.add("piv-nested-active");
+    });
+
+    nestedSubmenu.addEventListener("mouseleave", () => {
+      wrapper.classList.remove("piv-nested-active");
+    });
+
+    // Detect overflow and adjust positioning on wrapper hover
+    wrapper.addEventListener("mouseenter", () => {
+      // Small delay to ensure submenu is rendered
+      setTimeout(() => {
+        const rect = nestedSubmenu.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+
+        // Check if submenu overflows bottom of viewport
+        if (rect.bottom > viewportHeight) {
+          nestedSubmenu.classList.add("piv-position-bottom");
+        } else {
+          nestedSubmenu.classList.remove("piv-position-bottom");
+        }
+      }, 50);
+    });
+  });
+
   // Mobile menu toggle
   const mobileToggle = document.querySelector(".piv-mobile-menu-toggle");
   const menuBar = document.querySelector(".piv-menu-bar");

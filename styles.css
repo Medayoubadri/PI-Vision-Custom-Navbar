@@ -286,11 +286,13 @@
   top: 0;
   /* Position to the RIGHT of the parent main menu item */
   left: 100%;
-  background-color: #ffffff; /* Solid white background for the nested menu */
+  background-color: #ffffffd4; /* Match main dropdown background */
+  backdrop-filter: blur(10px); /* Match main dropdown */
   box-shadow: 6px 8px 30px 0px rgb(0 0 0 / 20%);
   z-index: 100000001 !important; /* Higher than main menu content */
   border-radius: 12px;
   padding: 5px;
+  border-top: 1px solid #ffffff7d; /* Match main dropdown */
   border-bottom: 3px solid #2a3e5d;
   transform: translateX(-6px); /* Small offset for transition */
   transition: opacity 0.3s ease-out, transform 0.3s ease-out,
@@ -298,6 +300,14 @@
   white-space: nowrap;
   display: flex;
   flex-direction: column;
+  max-height: 80vh; /* Limit height to 80% of viewport */
+  overflow-y: auto; /* Enable scrolling when content exceeds max-height */
+}
+
+/* Variant: Position nested submenu from bottom instead of top */
+.piv-nested-submenu.piv-position-bottom {
+  top: auto;
+  bottom: 0;
 }
 
 /* The individual link items inside the nested submenu */
@@ -308,10 +318,40 @@
 }
 
 /* Show submenu on hover of the wrapper */
-.piv-menu-wrapper:hover .piv-nested-submenu {
+.piv-menu-wrapper:hover .piv-nested-submenu,
+.piv-menu-wrapper.piv-nested-active .piv-nested-submenu {
   visibility: visible;
   opacity: 1;
   transform: translateX(5px);
+}
+
+/* Keep wrapper link styled when nested submenu is active */
+.piv-menu-wrapper.piv-nested-active > .piv-menu-item {
+  background-color: #00000021;
+  color: #026d26;
+}
+
+.piv-menu-wrapper.piv-nested-active > .piv-menu-item .piv-icon {
+  color: #026d26;
+}
+
+/* Custom scrollbar for nested submenu */
+.piv-nested-submenu::-webkit-scrollbar {
+  width: 6px;
+}
+
+.piv-nested-submenu::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+}
+
+.piv-nested-submenu::-webkit-scrollbar-thumb {
+  background: rgba(42, 62, 93, 0.5);
+  border-radius: 10px;
+}
+
+.piv-nested-submenu::-webkit-scrollbar-thumb:hover {
+  background: rgba(42, 62, 93, 0.7);
 }
 
 /* ------------------------------------------------
@@ -587,7 +627,7 @@
   display: flex;
   visibility: hidden;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
 }
 
 .piv-custom-picker-panel.active {
@@ -612,7 +652,7 @@
 }
 
 .piv-color-swatch {
-  width: 60px;
+  width: 25px;
   height: 100%;
   border-radius: 12px;
   background: #0f172a;
@@ -662,7 +702,7 @@
 .piv-sl-area {
   position: relative;
   height: 140px;
-  border-radius: 1px;
+  border-radius: 15px;
   background: linear-gradient(to top, black, transparent),
     linear-gradient(to right, white, red);
   cursor: crosshair;
