@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          PI Vision Custom Dropdown Menu
 // @namespace     https://github.com/Medayoubadri/PI-Vision-Custom-Navbar
-// @version       0.9.2-DEV-20250113
+// @version       0.9.2-DEV-20250114
 // @description   A custom navbar menu for PI Vision
 // @author        MEDAYOUBADRI
 // @updateURL     https://raw.githubusercontent.com/Medayoubadri/PI-Vision-Custom-Navbar/main/main.user.js
@@ -141,12 +141,22 @@
     const container = await waitForElement(TARGET_CONTAINER_SELECTOR);
     container.insertAdjacentHTML("afterbegin", generateCustomMenuHTML());
 
-    // Batch all UI injections
-    await Promise.all([
+    // Batch all UI injections (use allSettled to continue even if some fail)
+    const results = await Promise.allSettled([
       injectSidebarLogo(),
       injectLiveDate(),
       injectSecondaryLogo(),
     ]);
+
+    // Log any failed injections in dev mode
+    if (DEV_MODE) {
+      results.forEach((result, index) => {
+        const names = ["Sidebar Logo", "Live Date", "Secondary Logo"];
+        if (result.status === "rejected") {
+          console.warn(`⚠️ ${names[index]} injection failed:`, result.reason);
+        }
+      });
+    }
 
     // Attach all event listeners
     attachDropdownHoverListeners();
