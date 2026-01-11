@@ -585,6 +585,19 @@ function applyPIBackgroundColor(color) {
     ? `background-image: ${color} !important; background-color: #0f172a !important;`
     : `background: ${color} !important;`;
 
+  // For mobile utility button - extract base color from gradient or use solid color
+  let utilityBg = color;
+  let utilityBgHover = color;
+  
+  if (isGradient) {
+    // Extract first color from gradient for utility button
+    const colorMatch = color.match(/#[0-9a-f]{6}/i);
+    utilityBg = colorMatch ? colorMatch[0] : "#0f172a";
+    utilityBgHover = adjustColorBrightness(utilityBg, 20);
+  } else {
+    utilityBgHover = adjustColorBrightness(color, dark ? 20 : -20);
+  }
+
   styleEl.textContent = `
     /* PIV Custom Background Override */
     #viewport,
@@ -603,12 +616,42 @@ function applyPIBackgroundColor(color) {
       ${bgProperty}
       color: ${textColor} !important;
     }
+
+    /* Mobile utility button theme-aware background */
+    @media (max-width: 768px) {
+      .piv-utility-wrapper .piv-btn-cog {
+        background: ${utilityBg} !important;
+      }
+      .piv-utility-wrapper .piv-btn-cog:hover {
+        background: ${utilityBgHover} !important;
+      }
+    }
   `;
 }
 
 /**
- * Inject Secondary Logo
+ * Adjust color brightness
+ * @param {string} hex - Hex color code
+ * @param {number} percent - Percentage to adjust (-100 to 100)
+ * @returns {string} - Adjusted hex color
  */
+function adjustColorBrightness(hex, percent) {
+  const num = parseInt(hex.replace("#", ""), 16);
+  const amt = Math.round(2.55 * percent);
+  const R = Math.min(255, Math.max(0, (num >> 16) + amt));
+  const G = Math.min(255, Math.max(0, ((num >> 8) & 0x00ff) + amt));
+  const B = Math.min(255, Math.max(0, (num & 0x0000ff) + amt));
+  return "#" + (
+    0x1000000 +
+    R * 0x10000 +
+    G * 0x100 +
+    B
+  ).toString(16).slice(1);
+}
+
+/**
+ * Inject Secondary Logo
+``` */
 async function injectSecondaryLogo() {
   const logoContainer = await waitForElement(".c-app-logo");
 
@@ -688,25 +731,26 @@ function attachDropdownHoverListeners() {
       const wrapperRect = wrapper.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
       const viewportWidth = window.innerWidth;
-      
+
       // Get estimated submenu height (or use max-height)
       const submenuHeight = Math.min(
         nestedSubmenu.scrollHeight || 400,
         viewportHeight * 0.8
       );
-      
+
       // Check if submenu would overflow bottom
-      const wouldOverflowBottom = wrapperRect.top + submenuHeight > viewportHeight - 20;
-      
+      const wouldOverflowBottom =
+        wrapperRect.top + submenuHeight > viewportHeight - 20;
+
       // Position from bottom if in lower half OR would overflow
       if (wouldOverflowBottom || wrapperRect.top > viewportHeight / 2) {
         nestedSubmenu.classList.add("piv-position-bottom");
       }
     };
-    
+
     // Calculate position immediately on page load
     calculatePosition();
-    
+
     // Recalculate on window resize
     window.addEventListener("resize", calculatePosition);
 
@@ -718,6 +762,22 @@ function attachDropdownHoverListeners() {
     nestedSubmenu.addEventListener("mouseleave", () => {
       wrapper.classList.remove("piv-nested-active");
     });
+
+    // Mobile: Toggle nested submenu on click
+    const parentItem = wrapper.querySelector(".piv-menu-item");
+    if (parentItem) {
+      parentItem.addEventListener("click", (e) => {
+        // Only handle on mobile (touch devices or small screens)
+        if (window.innerWidth <= 768) {
+          // Prevent navigation if it's a parent with nested menu
+          if (wrapper.querySelector(".piv-nested-submenu")) {
+            e.preventDefault();
+            e.stopPropagation();
+            wrapper.classList.toggle("piv-nested-active");
+          }
+        }
+      });
+    }
   });
 
   // Mobile menu toggle
