@@ -30,7 +30,7 @@ function hideLoadingAnimation() {
   const overlay = document.getElementById("piv-loading-overlay");
   if (overlay) {
     overlay.classList.add("piv-loading-fade-out");
-    setTimeout(() => overlay.remove(), 500000);
+    setTimeout(() => overlay.remove(), 500);
   }
 }
 
@@ -55,19 +55,28 @@ function updateIconAndLabel(item, condition, stateOff, stateOn) {
 /**
  * Wait for an element to appear in the DOM
  * @param {string} selector - CSS selector to wait for
+ * @param {number} timeout - Maximum wait time in milliseconds (default: 10000)
  * @returns {Promise<Element>}
  */
-function waitForElement(selector) {
-  return new Promise((resolve) => {
+function waitForElement(selector, timeout = 10000) {
+  return new Promise((resolve, reject) => {
     // Check immediately
     const element = document.querySelector(selector);
     if (element) {
       return resolve(element);
     }
+
+    // Set timeout to reject if element never appears
+    const timeoutId = setTimeout(() => {
+      observer.disconnect();
+      reject(new Error(`Element ${selector} not found within ${timeout}ms`));
+    }, timeout);
+
     // Use MutationObserver if element is not yet present
     const observer = new MutationObserver((mutations) => {
       const foundElement = document.querySelector(selector);
       if (foundElement) {
+        clearTimeout(timeoutId);
         observer.disconnect();
         resolve(foundElement);
       }

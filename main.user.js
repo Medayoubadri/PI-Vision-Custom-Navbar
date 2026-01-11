@@ -182,7 +182,14 @@
   showLoadingAnimation();
 
   // 1. Initial run on page load
-  initializeMenu();
+  (async () => {
+    try {
+      await initializeMenu();
+    } catch (error) {
+      console.error("Menu initialization failed:", error);
+      hideLoadingAnimation();
+    }
+  })();
 
   // 2. Handle PI Vision's Single Page Application (SPA) navigation
   window.addEventListener("hashchange", initializeMenu, false);
