@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          PI Vision Custom Dropdown Menu
 // @namespace     https://github.com/Medayoubadri/PI-Vision-Custom-Navbar
-// @version       0.9.2-DEV-20250114
+// @version       0.9.2-DEV-20250115
 // @description   A custom navbar menu for PI Vision
 // @author        MEDAYOUBADRI
 // @updateURL     https://raw.githubusercontent.com/Medayoubadri/PI-Vision-Custom-Navbar/main/main.user.js

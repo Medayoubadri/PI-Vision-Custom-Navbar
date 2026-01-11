@@ -626,7 +626,7 @@ async function injectSecondaryLogo() {
  * Inject Sidebar Logo
  */
 async function injectSidebarLogo() {
-  const sidebar = await waitForElement("sidebar-pane");
+  const sidebar = await waitForElement("#sidebar-pane");
 
   if (sidebar.querySelector(".piv-sidebar-logo")) return;
 
