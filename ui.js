@@ -30,7 +30,7 @@ function hideLoadingAnimation() {
   const overlay = document.getElementById("piv-loading-overlay");
   if (overlay) {
     overlay.classList.add("piv-loading-fade-out");
-    setTimeout(() => overlay.remove(), 500);
+    setTimeout(() => overlay.remove(), 50000);
   }
 }
 
