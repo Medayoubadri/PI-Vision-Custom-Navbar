@@ -1322,10 +1322,10 @@
   }
 
   .piv-dropdown-content {
-    position: static;
-    visibility: visible;
-    opacity: 1;
-    transform: none;
+    position: fixed;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateX(-10px);
     max-width: 100%;
     margin: 0 20px;
     margin-top: 8px;
@@ -1335,11 +1335,13 @@
     border-radius: 12px;
     border-top: 1px solid #ffffff7d;
     border-bottom: 3px solid #2a3e5d;
-    display: none;
   }
 
   .piv-dropdown-item-container.active .piv-dropdown-content {
-    display: flex;
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 0.3s ease, transform 0.3s ease;
   }
 
   /* Nested submenus in mobile - stack vertically */
@@ -1373,22 +1375,21 @@
   .piv-utility-wrapper .piv-btn-cog {
     /* Background is set dynamically by theme - see applyPIBackgroundColor() */
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4),
-                0 2px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.1);
     transition: all 0.3s ease;
   }
 
   .piv-utility-wrapper .piv-btn-cog:hover {
     /* Hover background is set dynamically by theme - see applyPIBackgroundColor() */
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5),
-                0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3);
   }
 
   .piv-utility-container .piv-dropdown-content {
     right: 0;
     bottom: 60px;
     top: auto;
+    position: fixed;
   }
 
   .piv-live-date {
