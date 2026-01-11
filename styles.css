@@ -305,7 +305,7 @@
 /* Variant: Position nested submenu from bottom instead of top */
 .piv-nested-submenu.piv-position-bottom {
   top: auto;
-  bottom: 0;
+  bottom: -8px;
 }
 
 /* The individual link items inside the nested submenu */

@@ -677,11 +677,38 @@ function attachDropdownHoverListeners() {
     });
   });
 
-  // Nested submenu hover state and overflow detection
+  // Nested submenu hover state and position calculation
   const menuWrappers = document.querySelectorAll(".piv-menu-wrapper");
   menuWrappers.forEach((wrapper) => {
     const nestedSubmenu = wrapper.querySelector(".piv-nested-submenu");
     if (!nestedSubmenu) return;
+
+    // Calculate optimal position immediately (no delay, no hover needed)
+    const calculatePosition = () => {
+      const wrapperRect = wrapper.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const viewportWidth = window.innerWidth;
+      
+      // Get estimated submenu height (or use max-height)
+      const submenuHeight = Math.min(
+        nestedSubmenu.scrollHeight || 400,
+        viewportHeight * 0.8
+      );
+      
+      // Check if submenu would overflow bottom
+      const wouldOverflowBottom = wrapperRect.top + submenuHeight > viewportHeight - 20;
+      
+      // Position from bottom if in lower half OR would overflow
+      if (wouldOverflowBottom || wrapperRect.top > viewportHeight / 2) {
+        nestedSubmenu.classList.add("piv-position-bottom");
+      }
+    };
+    
+    // Calculate position immediately on page load
+    calculatePosition();
+    
+    // Recalculate on window resize
+    window.addEventListener("resize", calculatePosition);
 
     // Keep wrapper active when hovering over nested submenu
     nestedSubmenu.addEventListener("mouseenter", () => {
@@ -691,25 +718,6 @@ function attachDropdownHoverListeners() {
     nestedSubmenu.addEventListener("mouseleave", () => {
       wrapper.classList.remove("piv-nested-active");
     });
-
-    // Detect overflow only once on first hover
-    wrapper.addEventListener("mouseenter", () => {
-      // Skip if already checked
-      if (nestedSubmenu.dataset.positionChecked) return;
-      
-      nestedSubmenu.dataset.positionChecked = "true";
-      
-      // Check wrapper's position in viewport
-      setTimeout(() => {
-        const wrapperRect = wrapper.getBoundingClientRect();
-        const viewportHeight = window.innerHeight;
-        
-        // If wrapper is in bottom half of screen, position submenu from bottom
-        if (wrapperRect.top > viewportHeight / 2) {
-          nestedSubmenu.classList.add("piv-position-bottom");
-        }
-      }, 100);
-    }, { once: false });
   });
 
   // Mobile menu toggle
