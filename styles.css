@@ -1,7 +1,7 @@
 /* Main Header Bar */
 .piv-custom-header-bar {
   position: relative;
-  /* height: 36px; */
+  height: 36px;
   background: linear-gradient(to right, #072c50 0, #091d3a 100%);
   display: flex;
   align-items: center;
@@ -49,20 +49,17 @@
 
 /* Live Date and time styles */
 .piv-live-date {
-  display: flex;
-  font-size: 16px;
+  height: fit-content;
+  font-size: 15px;
   font-weight: 500;
   color: inherit;
   letter-spacing: 0.3px;
   white-space: nowrap;
   font-family: "Poppins", Arial, sans-serif;
-  justify-content: center;
-  align-items: center;
 }
 
 .piv-secondary-logo svg {
-  height: 24px;
-  width: auto;
+  height: 20px;
 }
 
 /* Hide the main menu and logo when minimized */
@@ -955,6 +952,23 @@
 }
 
 /**** Other PI Vision Styles ****/
+
+body {
+  color: #f1f1f1 !important;
+}
+
+.c-header-container {
+  height: fit-content !important;
+
+}
+.c-header {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  height: 40px !important;
+  align-items: center;
+}
 
 #display-splitter-container,
 .t-border-layout-mode {
