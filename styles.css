@@ -840,15 +840,15 @@
 }
 
 .piv-slider-r::-webkit-slider-track {
-  background: linear-gradient(to right, #1e293b, #ef4444);
+  background: linear-gradient(to right, #1e293b, #ef4444) !important;
 }
 
 .piv-slider-g::-webkit-slider-track {
-  background: linear-gradient(to right, #1e293b, #10b981);
+  background: linear-gradient(to right, #1e293b, #10b981) !important;
 }
 
 .piv-slider-b::-webkit-slider-track {
-  background: linear-gradient(to right, #1e293b, #3b82f6);
+  background: linear-gradient(to right, #1e293b, #3b82f6) !important;
 }
 
 .piv-picker-actions {
@@ -944,6 +944,13 @@
 }
 
 /**** Other PI Vision Styles ****/
+
+timebar input[type="text"], timebar button.duration {
+  height: 24px;
+  border: 1px solid rgb(255 255 255 / 68%) !important;
+  border-radius: 15px !important;
+  box-shadow: none !important;
+}
 
 body {
   color: #f1f1f1 !important;
