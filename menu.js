@@ -43,6 +43,11 @@ const menuData = [
         icon: "fa-solid fa-weight-scale",
       },
       {
+        text: "Volume Pipeline",
+        hash: "#/Displays/11220/Volume-Pipeline",
+        icon: "fa-solid fa-fill",
+      },
+      {
         text: "Heure de marche",
         hash: "#/Displays/11164/Heure-de-Marche_PIPE",
         icon: "fa-solid fa-clock",
